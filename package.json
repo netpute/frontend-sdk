@@ -1,0 +1,24 @@
+{
+  "name": "netpute-js",
+  "version": "1.0.0",
+  "main": "dist/netpute.cjs.js",
+  "module": "dist/netpute.esm.js",
+  "browser": "dist/netpute.umd.js",
+  "dependencies": {
+    "ms": "^2.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.2",
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "rollup": "^2.70.1"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "node test/test.js",
+    "pretest": "npm run build"
+  },
+  "files": [
+    "dist"
+  ]
+}
