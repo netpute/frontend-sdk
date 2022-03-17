@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Netpute JS Demo</title>
+    <script src="./netpute.umd.js"></script>
+  </head>
+  <body>
+    <section>
+      <h2>Wallet</h2>
+      <div>
+        <button
+          onclick="netpute.wallet.connect().then(any => document.getElementById('connect-result').innerText = any).catch(err => document.getElementById('connect-result').innerText = `Error ${err.code} ${err.message}`)"
+        >
+          Connect
+        </button>
+        Result:
+        <p id="connect-result"></p>
+      </div>
+      <div>
+        <button
+          onclick="netpute.wallet.disconnect().then(any => document.getElementById('disconnect-result').innerText = '<null>').catch(err => document.getElementById('disconnect-result').innerText = `Error ${err.code} ${err.message}`)"
+        >
+          Disconnect
+        </button>
+        Result:
+        <p id="disconnect-result"></p>
+      </div>
+      <div>
+        <button
+          onclick="document.getElementById('address-result').innerText = netpute.wallet.address || '<null>'"
+        >
+          Get Address
+        </button>
+        Result:
+        <p id="address-result"></p>
+      </div>
+    </section>
+  </body>
+</html>
