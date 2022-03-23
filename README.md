@@ -3,14 +3,19 @@
 ## Getting Started
 
 1. Install with yarn
+
 ```
 yarn
 ```
+
 2. Build
+
 ```
 yarn build
 ```
+
 3. Copy required type of library
+
 ```
 cp ./dist/netpute.<cjs|esm|umd>.js /path/to/somewhere
 ```
@@ -18,10 +23,23 @@ cp ./dist/netpute.<cjs|esm|umd>.js /path/to/somewhere
 ## Demo
 
 1. Build
+
 ```
 yarn build
 ```
+
 2. Start Demo Server
+
 ```
 yarn demo
 ```
+
+## JSDoc
+
+1. Build
+
+```
+yarn build:docs # or yarn build
+```
+
+2. Documents are generated under `/docs/`
