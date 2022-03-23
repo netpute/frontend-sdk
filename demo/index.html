@@ -6,27 +6,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Netpute JS Demo</title>
     <script src="./netpute.umd.js"></script>
+    <script>
+      function onConnectButton() {
+        netpute.wallet
+          .connect()
+          .then(
+            (any) => (document.getElementById("connect-result").innerText = any)
+          )
+          .catch(
+            (err) =>
+              (document.getElementById(
+                "connect-result"
+              ).innerText = `Error ${err.code} ${err.message}`)
+          );
+      }
+      function onDisconnectButton() {
+        netpute.wallet
+          .disconnect()
+          .then(
+            (any) =>
+              (document.getElementById("disconnect-result").innerText =
+                "<null>")
+          )
+          .catch(
+            (err) =>
+              (document.getElementById(
+                "disconnect-result"
+              ).innerText = `Error ${err.code} ${err.message}`)
+          );
+      }
+    </script>
   </head>
   <body>
     <section>
       <h2>Wallet</h2>
       <div>
-        <button
-          onclick="netpute.wallet.connect().then(any => document.getElementById('connect-result').innerText = any).catch(err => document.getElementById('connect-result').innerText = `Error ${err.code} ${err.message}`)"
-        >
-          Connect
-        </button>
-        Result:
-        <p id="connect-result"></p>
+        <button onclick="onConnectButton()">Connect</button>
+        <div>
+          Result:
+          <p id="connect-result"></p>
+        </div>
       </div>
       <div>
-        <button
-          onclick="netpute.wallet.disconnect().then(any => document.getElementById('disconnect-result').innerText = '<null>').catch(err => document.getElementById('disconnect-result').innerText = `Error ${err.code} ${err.message}`)"
-        >
-          Disconnect
-        </button>
-        Result:
-        <p id="disconnect-result"></p>
+        <button onclick="onDisconnectButton()">Disconnect</button>
+        <div>
+          Result:
+          <p id="disconnect-result"></p>
+        </div>
       </div>
       <div>
         <button
@@ -34,8 +60,10 @@
         >
           Get Address
         </button>
-        Result:
-        <p id="address-result"></p>
+        <div>
+          Result:
+          <p id="address-result"></p>
+        </div>
       </div>
     </section>
   </body>

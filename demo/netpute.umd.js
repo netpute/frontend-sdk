@@ -14812,33 +14812,47 @@
 	    }
 	}
 
-	async function connect(wallet) {
+	/**
+	 * Ask user to connect its wallet
+	 * @memberof Wallet
+	 * @returns {string} Address of connected wallet
+	 */
+	async function connect() {
 	  if (!window.ethereum) {
 	    throw new WalletError("No wallet detected", 404);
 	  }
-	  wallet._provider = new Web3Provider(window.ethereum);
+	  this._provider = new Web3Provider(window.ethereum);
 
 	  try {
-	    await wallet._provider.send("eth_requestAccounts", []);
+	    await this._provider.send("eth_requestAccounts", []);
 	  } catch (err) {
 	    if (err.code === 4001)
 	      throw new WalletError("User denied to enable wallet", 401);
 	    else throw new WalletError("Uknown error", 400);
 	  }
-	  const signer = wallet._provider.getSigner();
-	  wallet.address = await signer.getAddress();
-	  return wallet.address;
+	  const signer = this._provider.getSigner();
+	  this.address = await signer.getAddress();
+	  return this.address;
 	}
 
-	async function disconnect(wallet) {
-	  wallet._provider = null;
-	  wallet.address = null;
+	/**
+	 * Clear provider (note: we disconnects from wallet but can't promise wallet disconnect from us)
+	 * @memberof Wallet
+	 */
+	async function disconnect() {
+	  this._provider = null;
+	  this.address = null;
 	}
 
+	/**
+	 * Wallet
+	 * @namespace Wallet
+	 * @property {string | null} address - Connected wallet address or null
+	 */
 	const wallet = {
 	  address: null,
-	  connect: null,
-	  disconnect: null,
+	  connect,
+	  disconnect,
 	  balanceOf: null,
 	  switchNetwork: null,
 	  listener: null,
@@ -14847,18 +14861,9 @@
 	  _provider: null,
 	};
 
-	function initWallet() {
-	  if (!window.ethereum) {
-	    console.warn(
-	      "No ethereum object found, user may haven't installed wallet."
-	    );
-	  }
-
-	  wallet.connect = connect.bind(this, wallet);
-	  wallet.disconnect = disconnect.bind(this, wallet);
+	if (!window.ethereum) {
+	  console.warn("No ethereum object found, user may haven't installed wallet.");
 	}
-
-	initWallet();
 
 	exports.wallet = wallet;
 

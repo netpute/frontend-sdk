@@ -1,9 +1,14 @@
-import { connect, disconnect } from './connect';
+import { connect, disconnect } from "./connect";
 
+/**
+ * Wallet
+ * @namespace Wallet
+ * @property {string | null} address - Connected wallet address or null
+ */
 export const wallet = {
   address: null,
-  connect: null,
-  disconnect: null,
+  connect,
+  disconnect,
   balanceOf: null,
   switchNetwork: null,
   listener: null,
@@ -12,15 +17,6 @@ export const wallet = {
   _provider: null,
 };
 
-function initWallet() {
-  if (!window.ethereum) {
-    console.warn(
-      "No ethereum object found, user may haven't installed wallet."
-    );
-  }
-
-  wallet.connect = connect.bind(this, wallet);
-  wallet.disconnect = disconnect.bind(this, wallet);
+if (!window.ethereum) {
+  console.warn("No ethereum object found, user may haven't installed wallet.");
 }
-
-initWallet();
