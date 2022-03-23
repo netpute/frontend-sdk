@@ -16,6 +16,7 @@
   },
   "scripts": {
     "build": "rollup -c && jsdoc src -r -d docs",
+    "build:docs": "jsdoc src -r -d docs",
     "dev": "rollup -c -w",
     "test": "node test/test.js",
     "pretest": "npm run build",

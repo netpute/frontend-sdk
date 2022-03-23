@@ -35,6 +35,20 @@
               ).innerText = `Error ${err.code} ${err.message}`)
           );
       }
+      function onChainButton() {
+        netpute.wallet
+          .switchNetwork(document.getElementById("chain-input").value)
+          .then(
+            (any) =>
+              (document.getElementById("chain-result").innerText = "<null>")
+          )
+          .catch(
+            (err) =>
+              (document.getElementById(
+                "chain-result"
+              ).innerText = `Error ${err.code} ${err.message}`)
+          );
+      }
     </script>
   </head>
   <body>
@@ -63,6 +77,22 @@
         <div>
           Result:
           <p id="address-result"></p>
+        </div>
+      </div>
+      <div>
+        <input type="text" id="balance-input" placeholder="0x..." />
+        <button onclick="onBalanceButton()">Get Balance</button>
+        <div>
+          Result:
+          <p id="balance-result"></p>
+        </div>
+      </div>
+      <div>
+        <input type="text" id="chain-input" placeholder="0x1" />
+        <button onclick="onChainButton()">Switch Network</button>
+        <div>
+          Result:
+          <p id="chain-result"></p>
         </div>
       </div>
     </section>

@@ -43,57 +43,97 @@
         
 
 
-    <h5 class="subsection-title">Properties:</h5>
+<dl class="details">
 
     
 
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
     
 
-        <tr>
-            
-                <td class="name"><code>address</code></td>
-            
+    
 
-            <td class="type">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line4">line 4</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+            <h3>Example</h3>
             
-                
+    <pre class="prettyprint"><code>netpute.wallet.connect().then(console.log)</code></pre>
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".address"><span class="type-signature">(static) </span>address<span class="type-signature"> :string|null</span></h4>
+
+
+
+
+<div class="description">
+    Address of connected wallet, null when not connected
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
 <span class="param-type">string</span>
 |
 
 <span class="param-type">null</span>
 
 
-            
-            </td>
+        </li>
+    </ul>
 
-            
-
-            
-
-            <td class="description last">Connected wallet address or null</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -127,7 +167,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line3">line 3</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -139,22 +179,11 @@
 </dl>
 
 
+
+
+
+
         
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
     
 
     
@@ -166,7 +195,221 @@
     
 
     
-    <h4 class="name" id=".connect"><span class="type-signature">(async, static) </span>connect<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id=".balanceOf"><span class="type-signature">(static) </span>balanceOf<span class="signature">(address, skipCheck<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise.&lt;<a href="external-BigNumber.html">external:BigNumber</a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Get balance of an address
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>address</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Target wallet address</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>skipCheck</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Skip checksum of address</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line56">line 56</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - Balance of target wallet address
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;<a href="external-BigNumber.html">external:BigNumber</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".connect"><span class="type-signature">(static) </span>connect<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
     
 
     
@@ -218,7 +461,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="connect.js.html">connect.js</a>, <a href="connect.js.html#line9">line 9</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line22">line 22</a>
     </li></ul></dd>
     
 
@@ -276,7 +519,7 @@
     
 
     
-    <h4 class="name" id=".disconnect"><span class="type-signature">(async, static) </span>disconnect<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".disconnect"><span class="type-signature">(static) </span>disconnect<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -328,7 +571,187 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="connect.js.html">connect.js</a>, <a href="connect.js.html#line31">line 31</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line44">line 44</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".switchNetwork"><span class="type-signature">(static) </span>switchNetwork<span class="signature">(chainId, chainConfig<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Ask user to switch to a chain
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>chainId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Target chain id</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>chainConfig</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#NetworkConfig">NetworkConfig</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Chain config is used to ask user to add when network doesn't exist</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line75">line 75</a>
     </li></ul></dd>
     
 
@@ -374,13 +797,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="Wallet.html">Wallet</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-BigNumber.html">BigNumber</a></li></ul><h3>Namespaces</h3><ul><li><a href="Wallet.html">Wallet</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Wed Mar 23 2022 11:10:30 GMT+0800 (Taipei Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Wed Mar 23 2022 14:34:15 GMT+0800 (Taipei Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
