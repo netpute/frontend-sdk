@@ -12252,7 +12252,7 @@
      *   - transaction hash
      */
     const PollableEvents = ["block", "network", "pending", "poll"];
-    class Event {
+    class Event$1 {
         constructor(tag, listener, once) {
             defineReadOnly(this, "tag", tag);
             defineReadOnly(this, "listener", listener);
@@ -14017,7 +14017,7 @@
             this.polling = (this._events.filter((e) => e.pollable()).length > 0);
         }
         _addEventListener(eventName, listener, once) {
-            const event = new Event(getEventTag(eventName), listener, once);
+            const event = new Event$1(getEventTag(eventName), listener, once);
             this._events.push(event);
             this._startEvent(event);
             return this;
@@ -14813,28 +14813,38 @@
     }
 
     /**
-     * Wallet
-     * @namespace Wallet
-     * @example
-     * netpute.wallet.connect().then(console.log)
+     * @class
+     * Wallet class
      */
-    const wallet = {
+    class Wallet extends EventTarget {
+      _address = null;
+      static _events = ["disconnected", "walletchanged", "networkchanged"];
+
+      constructor() {
+        super();
+        if (!window.ethereum) {
+          console.warn(
+            "No ethereum object found, user may haven't installed wallet."
+          );
+        }
+      }
+
       /**
-       * @memberof Wallet
-       * @var {string | null} address - Address of connected wallet, null when not connected
+       * @return {string | null} address - Address of connected wallet, null when not connected
        */
-      address: null,
+      get address() {
+        return this._address;
+      }
 
       /**
        * Ask user to connect its wallet
-       * @memberof Wallet
        * @returns {string} Address of connected wallet
        */
       async connect() {
         if (!window.ethereum) {
           throw new WalletError("No wallet detected", 404);
         }
-        this._provider = new Web3Provider(window.ethereum);
+        this._provider = new Web3Provider(window.ethereum, "any");
 
         try {
           await this._provider.send("eth_requestAccounts", []);
@@ -14844,25 +14854,39 @@
           else throw new WalletError("Uknown error", 400);
         }
         const signer = this._provider.getSigner();
-        this.address = await signer.getAddress();
+        this._address = await signer.getAddress();
+        this._eventTarget = new EventTarget();
+
+        this._provider.on("network", (newNetwork, oldNetwork) => {
+          if (newNetwork.chainId !== oldNetwork.chainId) {
+            this._eventTarget.dispatchEvent(new Event("networkchanged"));
+          }
+        });
+        this._provider.provider.on("accountsChanged", (accs) => {
+          if (accs.length) {
+            this._eventTarget.dispatchEvent(new Event("walletchanged"));
+            this._address = accs[0];
+          } else {
+            this._eventTarget.dispatchEvent(new Event("disconnected"));
+          }
+        });
         return this.address;
-      },
+      }
 
       /**
        * Clear provider (note: we disconnects from wallet but can't promise wallet disconnect from us)
-       * @memberof Wallet
        */
       async disconnect() {
         this._provider = null;
-        this.address = null;
-      },
+        this._address = null;
+        this._eventTarget = null;
+      }
 
       /**
        * Get balance of an address
-       * @memberof Wallet
        * @param {string} address - Target wallet address
        * @param {boolean} [skipCheck=false] - Skip checksum of address
-       * @returns {Promise<external:BigNumber>} - Balance of target wallet address
+       * @returns {external:BigNumber} - Balance of target wallet address
        */
       async balanceOf(address, skipCheck = true) {
         if (!this._provider) {
@@ -14875,11 +14899,10 @@
           }
           throw new WalletError("Unknown error", 500);
         });
-      },
+      }
 
       /**
        * Ask user to switch to a chain
-       * @memberof Wallet
        * @param {number | string} chainId - Target chain id
        * @param {NetworkConfig} [chainConfig] - Chain config is used to ask user to add when network doesn't exist
        */
@@ -14906,8 +14929,8 @@
           await this._provider.send("wallet_switchEthereumChain", [{ chainId }]);
           return;
         } catch (switchError) {
-          // This error code indicates that the chain has not been added to MetaMask.
           if (switchError.code === 4902) {
+            // This error code indicates that the chain has not been added to MetaMask.
             if (!chainConfig) throw new WalletError("Network not added", 404);
 
             try {
@@ -14920,20 +14943,40 @@
               throw new WalletError("User refused to add the network", 401);
             }
           } else if (switchError.code === 4001) {
+            // This error code indicates that user rejected the switch.
             throw new WalletError("User refused to switch to the network", 401);
           }
           throw new WalletError("Unknown error", 500);
         }
-      },
-      addEventListener: null,
-      removeEventListener: null,
-      _provider: null,
-      _listeners: [],
-    };
+      }
 
-    if (!window.ethereum) {
-      console.warn("No ethereum object found, user may haven't installed wallet.");
+      /**
+       * @param {string} event - Event name
+       * @param {Function} listener - Event listener
+       */
+      addEventListener(event, listener) {
+        if (!this._eventTarget) throw new WalletError("Not inited", 400);
+        if (!Wallet._events.includes(event))
+          throw new WalletError("No such event", 400);
+        return this._eventTarget.addEventListener(event, listener);
+      }
+
+      /**
+       * @param {string} event - Event name
+       * @param {Function} listener - Event listener
+       */
+      removeEventListener(event, listener) {
+        if (!this._eventTarget) throw new WalletError("Not inited", 400);
+        if (!Wallet._events.includes(event))
+          throw new WalletError("No such event", 400);
+        return this._eventTarget.removeEventListener(event, listener);
+      }
+
+      _provider = null;
+      _eventTarget = null;
     }
+
+    const wallet = new Wallet();
 
     /**
      * Network Config according to EIP-3085
@@ -14957,6 +15000,21 @@
     /**
      * @external BigNumber
      * @see https://docs.ethers.io/v5/api/utils/bignumber/
+     */
+
+    /**
+     * Wallet changed
+     * @event Wallet#walletchanged
+     */
+
+    /**
+     * Network changed, there might be a delay
+     * @event Wallet#networkchanged
+     */
+
+    /**
+     * Wallet disconnected by user (note: disconnect function won't trigger this event)
+     * @event Wallet#disconnected
      */
 
     exports.wallet = wallet;

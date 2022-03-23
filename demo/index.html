@@ -10,15 +10,29 @@
       function onConnectButton() {
         netpute.wallet
           .connect()
-          .then(
-            (any) => (document.getElementById("connect-result").innerText = any)
-          )
+          .then((any) => {
+            document.getElementById("connect-result").innerText = any;
+          })
           .catch(
             (err) =>
               (document.getElementById(
                 "connect-result"
               ).innerText = `Error ${err.code} ${err.message}`)
-          );
+          )
+          .then(() => {
+            netpute.wallet.addEventListener("walletchanged", () => {
+              document.getElementById("wallet-log").innerHTML +=
+                "Wallet changed <br />";
+            });
+            netpute.wallet.addEventListener("networkchanged", () => {
+              document.getElementById("wallet-log").innerHTML +=
+                "Network changed <br />";
+            });
+            netpute.wallet.addEventListener("disconnected", () => {
+              document.getElementById("wallet-log").innerHTML +=
+                "Disconnect <br />";
+            });
+          });
       }
       function onDisconnectButton() {
         netpute.wallet
@@ -32,6 +46,21 @@
             (err) =>
               (document.getElementById(
                 "disconnect-result"
+              ).innerText = `Error ${err.code} ${err.message}`)
+          );
+      }
+      function onBalanceButton() {
+        netpute.wallet
+          .balanceOf(document.getElementById("balance-input").value)
+          .then(
+            (any) =>
+              (document.getElementById("balance-result").innerText =
+                any.toString())
+          )
+          .catch(
+            (err) =>
+              (document.getElementById(
+                "balance-result"
               ).innerText = `Error ${err.code} ${err.message}`)
           );
       }
@@ -93,6 +122,12 @@
         <div>
           Result:
           <p id="chain-result"></p>
+        </div>
+      </div>
+      <div>
+        <div>
+          Event:
+          <p id="wallet-log"></p>
         </div>
       </div>
     </section>
