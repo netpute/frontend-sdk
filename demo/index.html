@@ -7,6 +7,7 @@
     <title>Netpute JS Demo</title>
     <script src="./netpute.umd.js"></script>
     <script>
+      let eventAdded = false;
       function onConnectButton() {
         netpute.wallet
           .connect()
@@ -20,6 +21,7 @@
               ).innerText = `Error ${err.code} ${err.message}`)
           )
           .then(() => {
+            if (eventAdded) return;
             netpute.wallet.addEventListener("walletchanged", () => {
               document.getElementById("wallet-log").innerHTML +=
                 "Wallet changed <br />";
@@ -32,6 +34,7 @@
               document.getElementById("wallet-log").innerHTML +=
                 "Disconnect <br />";
             });
+            eventAdded = true;
           });
       }
       function onDisconnectButton() {
@@ -106,6 +109,17 @@
         <div>
           Result:
           <p id="address-result"></p>
+        </div>
+      </div>
+      <div>
+        <button
+          onclick="document.getElementById('network-result').innerText = netpute.wallet.network || '<null>'"
+        >
+          Get Network
+        </button>
+        <div>
+          Result:
+          <p id="network-result"></p>
         </div>
       </div>
       <div>

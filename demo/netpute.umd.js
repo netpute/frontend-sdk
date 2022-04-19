@@ -14818,6 +14818,7 @@
      */
     class Wallet extends EventTarget {
       _address = null;
+      _network = null;
       static _events = ["disconnected", "walletchanged", "networkchanged"];
 
       constructor() {
@@ -14834,6 +14835,13 @@
        */
       get address() {
         return this._address;
+      }
+
+      /**
+       * @return {number | null} networkId - Network ID of using network, null when no wallet
+       */
+      get network() {
+        return this._network;
       }
 
       /**
@@ -14855,11 +14863,13 @@
         }
         const signer = this._provider.getSigner();
         this._address = await signer.getAddress();
+        this._network = (await this._provider.getNetwork()).chainId;
         this._eventTarget = new EventTarget();
 
         this._provider.on("network", (newNetwork, oldNetwork) => {
           if (newNetwork.chainId !== oldNetwork.chainId) {
             this._eventTarget.dispatchEvent(new Event("networkchanged"));
+            this._network = newNetwork.chainId;
           }
         });
         this._provider.provider.on("accountsChanged", (accs) => {
@@ -14879,6 +14889,7 @@
       async disconnect() {
         this._provider = null;
         this._address = null;
+        this._network = null;
         this._eventTarget = null;
       }
 
