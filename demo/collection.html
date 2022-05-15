@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Netpute JS Demo</title>
+    <script src="./netpute.umd.js"></script>
+    <script>
+      netpute.config.init({
+        rpc: "wss://mainnet.infura.io/ws/v3/5ca338d679d5426dad18adec87e311a2",
+        deployerAddress: "0x024Ee439FC25141BEA77dFe69c24a10e597cD499",
+      });
+      let collection;
+      async function onInitButton() {
+        try {
+          collection = new netpute.Collection(
+            document.getElementById("address-input").value,
+            document.getElementById("type-input").value
+          );
+          document.getElementById("init-result").innerHTML +=
+            "Initing...<br />";
+          await collection.inited;
+          document.getElementById(
+            "init-result"
+          ).innerHTML += `Inited type ${collection.type}<br />`;
+        } catch (err) {
+          document.getElementById(
+            "init-result"
+          ).innerHTML += `Init failed: ${err.code} ${err.message}<br />`;
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <section>
+      <h2>Collection</h2>
+      <div>
+        <input type="text" id="address-input" placeholder="0x..." />
+        <input
+          type="text"
+          id="type-input"
+          placeholder="empty or ERC-721 or ERC-1155"
+        />
+        <button onclick="onInitButton()">Init</button>
+        <div>
+          Result:
+          <p id="init-result"></p>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

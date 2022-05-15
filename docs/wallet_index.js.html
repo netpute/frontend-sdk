@@ -30,10 +30,13 @@
 import { ethers } from "ethers";
 
 /**
+ * @class
  * Wallet class
  */
 class Wallet extends EventTarget {
   _address = null;
+  _network = null;
+  static _events = ["disconnected", "walletchanged", "networkchanged"];
 
   constructor() {
     super();
@@ -45,10 +48,17 @@ class Wallet extends EventTarget {
   }
 
   /**
-   * @return {string | null} address - Address of connected wallet, null when not connected
+   * Address of connected wallet, null when not connected
    */
   get address() {
     return this._address;
+  }
+
+  /**
+   * Network ID of using network, null when no wallet
+   */
+  get network() {
+    return this._network;
   }
 
   /**
@@ -59,7 +69,7 @@ class Wallet extends EventTarget {
     if (!window.ethereum) {
       throw new WalletError("No wallet detected", 404);
     }
-    this._provider = new ethers.providers.Web3Provider(window.ethereum);
+    this._provider = new ethers.providers.Web3Provider(window.ethereum, "any");
 
     try {
       await this._provider.send("eth_requestAccounts", []);
@@ -70,7 +80,23 @@ class Wallet extends EventTarget {
     }
     const signer = this._provider.getSigner();
     this._address = await signer.getAddress();
+    this._network = (await this._provider.getNetwork()).chainId;
     this._eventTarget = new EventTarget();
+
+    this._provider.on("network", (newNetwork, oldNetwork) => {
+      if (newNetwork.chainId !== oldNetwork.chainId) {
+        this._eventTarget.dispatchEvent(new Event("networkchanged"));
+        this._network = newNetwork.chainId;
+      }
+    });
+    this._provider.provider.on("accountsChanged", (accs) => {
+      if (accs.length) {
+        this._eventTarget.dispatchEvent(new Event("walletchanged"));
+        this._address = accs[0];
+      } else {
+        this._eventTarget.dispatchEvent(new Event("disconnected"));
+      }
+    });
     return this.address;
   }
 
@@ -80,6 +106,7 @@ class Wallet extends EventTarget {
   async disconnect() {
     this._provider = null;
     this._address = null;
+    this._network = null;
     this._eventTarget = null;
   }
 
@@ -87,7 +114,7 @@ class Wallet extends EventTarget {
    * Get balance of an address
    * @param {string} address - Target wallet address
    * @param {boolean} [skipCheck=false] - Skip checksum of address
-   * @returns {Promise&lt;external:BigNumber>} - Balance of target wallet address
+   * @returns {external:BigNumber} - Balance of target wallet address
    */
   async balanceOf(address, skipCheck = true) {
     if (!this._provider) {
@@ -157,7 +184,9 @@ class Wallet extends EventTarget {
    */
   addEventListener(event, listener) {
     if (!this._eventTarget) throw new WalletError("Not inited", 400);
-    this._eventTarget.addEventListener(event, listener);
+    if (!Wallet._events.includes(event))
+      throw new WalletError("No such event", 400);
+    return this._eventTarget.addEventListener(event, listener);
   }
 
   /**
@@ -166,7 +195,9 @@ class Wallet extends EventTarget {
    */
   removeEventListener(event, listener) {
     if (!this._eventTarget) throw new WalletError("Not inited", 400);
-    this._eventTarget.removeEventListener(event, listener);
+    if (!Wallet._events.includes(event))
+      throw new WalletError("No such event", 400);
+    return this._eventTarget.removeEventListener(event, listener);
   }
 
   _provider = null;
@@ -201,14 +232,17 @@ export const wallet = new Wallet();
 
 /**
  * Wallet changed
- * @event Wallet#walletchange
- * @type {Object}
- * @property {string} address - New wallet address
+ * @event Wallet#walletchanged
  */
 
 /**
- * Wallet disconnected
- * @event Wallet#disconnect
+ * Network changed, there might be a delay
+ * @event Wallet#networkchanged
+ */
+
+/**
+ * Wallet disconnected by user (note: disconnect function won't trigger this event)
+ * @event Wallet#disconnected
  */
 </code></pre>
         </article>
@@ -220,13 +254,13 @@ export const wallet = new Wallet();
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-BigNumber.html">BigNumber</a></li></ul><h3>Classes</h3><ul><li><a href="Marketplace.html">Marketplace</a></li><li><a href="Wallet.html">Wallet</a></li></ul><h3>Events</h3><ul><li><a href="Wallet.html#event:disconnect">disconnect</a></li><li><a href="Wallet.html#event:walletchange">walletchange</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-BigNumber.html">BigNumber</a></li></ul><h3>Classes</h3><ul><li><a href="Collection.html">Collection</a></li><li><a href="Wallet.html">Wallet</a></li></ul><h3>Events</h3><ul><li><a href="Wallet.html#event:disconnected">disconnected</a></li><li><a href="Wallet.html#event:networkchanged">networkchanged</a></li><li><a href="Wallet.html#event:walletchanged">walletchanged</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Wed Mar 23 2022 15:56:56 GMT+0800 (Taipei Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sun May 15 2022 17:41:31 GMT+0800 (Taipei Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
