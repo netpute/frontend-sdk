@@ -20,14 +20,14 @@ class Wallet extends EventTarget {
   }
 
   /**
-   * @return {string | null} address - Address of connected wallet, null when not connected
+   * Address of connected wallet, null when not connected
    */
   get address() {
     return this._address;
   }
 
   /**
-   * @return {number | null} networkId - Network ID of using network, null when no wallet
+   * Network ID of using network, null when no wallet
    */
   get network() {
     return this._network;
