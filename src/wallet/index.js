@@ -8,6 +8,7 @@ import { ethers } from "ethers";
 class Wallet extends EventTarget {
   _address = null;
   _network = null;
+  _signer = null;
   static _events = ["disconnected", "walletchanged", "networkchanged"];
 
   constructor() {
@@ -34,6 +35,13 @@ class Wallet extends EventTarget {
   }
 
   /**
+   * Ether.js signer object, null when no wallet
+   */
+  get signer() {
+    return this._signer;
+  }
+
+  /**
    * Ask user to connect its wallet
    * @returns {string} Address of connected wallet
    */
@@ -50,8 +58,8 @@ class Wallet extends EventTarget {
         throw new WalletError("User denied to enable wallet", 401);
       else throw new WalletError("Uknown error", 400);
     }
-    const signer = this._provider.getSigner();
-    this._address = await signer.getAddress();
+    this._signer = this._provider.getSigner();
+    this._address = await this._signer.getAddress();
     this._network = (await this._provider.getNetwork()).chainId;
     this._eventTarget = new EventTarget();
 
@@ -65,6 +73,7 @@ class Wallet extends EventTarget {
       if (accs.length) {
         this._eventTarget.dispatchEvent(new Event("walletchanged"));
         this._address = accs[0];
+        this._signer = this._provider.getSigner(accs[0]);
       } else {
         this._eventTarget.dispatchEvent(new Event("disconnected"));
       }
