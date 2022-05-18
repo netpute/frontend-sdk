@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 
 /**
  * @class
- * Wallet class
+ * Wallet class. It's a singleton class, an instance is inited as `netpute.wallet` when loading.
  */
 class Wallet extends EventTarget {
   _address = null;

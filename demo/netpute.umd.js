@@ -18123,11 +18123,12 @@
 
   /**
    * @class
-   * Wallet class
+   * Wallet class. It's a singleton class, an instance is inited as `netpute.wallet` when loading.
    */
   class Wallet extends EventTarget {
     _address = null;
     _network = null;
+    _signer = null;
     static _events = ["disconnected", "walletchanged", "networkchanged"];
 
     constructor() {
@@ -18154,6 +18155,13 @@
     }
 
     /**
+     * Ether.js signer object, null when no wallet
+     */
+    get signer() {
+      return this._signer;
+    }
+
+    /**
      * Ask user to connect its wallet
      * @returns {string} Address of connected wallet
      */
@@ -18170,8 +18178,8 @@
           throw new WalletError("User denied to enable wallet", 401);
         else throw new WalletError("Uknown error", 400);
       }
-      const signer = this._provider.getSigner();
-      this._address = await signer.getAddress();
+      this._signer = this._provider.getSigner();
+      this._address = await this._signer.getAddress();
       this._network = (await this._provider.getNetwork()).chainId;
       this._eventTarget = new EventTarget();
 
@@ -18185,6 +18193,7 @@
         if (accs.length) {
           this._eventTarget.dispatchEvent(new Event("walletchanged"));
           this._address = accs[0];
+          this._signer = this._provider.getSigner(accs[0]);
         } else {
           this._eventTarget.dispatchEvent(new Event("disconnected"));
         }
@@ -18345,10 +18354,20 @@
     }
   }
 
+  /**
+   * @class
+   * Config class. It's a singleton class, an instance is inited as `netpute.config` when loading.
+   */
   class Config {
     _provider = null;
     _deployer = null;
 
+    /**
+     * Init config for other components. Re-init is possible when network was changed
+     * @param {Object} Obj
+     * @param {string} Obj.rpc Read-only RPC url, websocket (wss) or https is acceptable
+     * @param {string} Obj.deployerAddress Address of deployer
+     */
     init({ rpc, deployerAddress }) {
       if (rpc.startsWith("wss://"))
         this._provider = new WebSocketProvider(rpc);
@@ -18359,18 +18378,24 @@
       this._deployer = deployerAddress;
     }
 
-    getProvider() {
+    /**
+     * Ethers.js provider object, cannot be used to send transaction
+     */
+    get provider() {
       return this._provider;
     }
 
-    getDeployerAddress() {
+    /**
+     * Deployer address
+     */
+    get deployerAddress() {
       return this._deployer;
     }
   }
 
   const config = new Config();
 
-  var abi$1 = [
+  var abi$2 = [
   	{
   		inputs: [
   			{
@@ -19066,10 +19091,10 @@
   	}
   ];
   var ERC721 = {
-  	abi: abi$1
+  	abi: abi$2
   };
 
-  var abi = [
+  var abi$1 = [
   	{
   		inputs: [
   			{
@@ -19788,12 +19813,200 @@
   	}
   ];
   var ERC1155 = {
+  	abi: abi$1
+  };
+
+  var abi = [
+  	{
+  		inputs: [
+  			{
+  				internalType: "contract Registry",
+  				name: "reg",
+  				type: "address"
+  			},
+  			{
+  				internalType: "contract DeployerERC721",
+  				name: "deployerERC721_",
+  				type: "address"
+  			},
+  			{
+  				internalType: "contract DeployerERC1155",
+  				name: "deployerERC1155_",
+  				type: "address"
+  			}
+  		],
+  		stateMutability: "nonpayable",
+  		type: "constructor"
+  	},
+  	{
+  		anonymous: false,
+  		inputs: [
+  			{
+  				indexed: true,
+  				internalType: "address",
+  				name: "collection",
+  				type: "address"
+  			},
+  			{
+  				indexed: true,
+  				internalType: "address",
+  				name: "creator",
+  				type: "address"
+  			}
+  		],
+  		name: "ERC1155Created",
+  		type: "event"
+  	},
+  	{
+  		anonymous: false,
+  		inputs: [
+  			{
+  				indexed: true,
+  				internalType: "address",
+  				name: "collection",
+  				type: "address"
+  			},
+  			{
+  				indexed: true,
+  				internalType: "address",
+  				name: "creator",
+  				type: "address"
+  			}
+  		],
+  		name: "ERC721Created",
+  		type: "event"
+  	},
+  	{
+  		inputs: [
+  			{
+  				internalType: "bytes32",
+  				name: "salt",
+  				type: "bytes32"
+  			},
+  			{
+  				internalType: "uint256",
+  				name: "royalty",
+  				type: "uint256"
+  			},
+  			{
+  				internalType: "bytes",
+  				name: "signature",
+  				type: "bytes"
+  			}
+  		],
+  		name: "createERC1155",
+  		outputs: [
+  			{
+  				internalType: "address",
+  				name: "",
+  				type: "address"
+  			}
+  		],
+  		stateMutability: "payable",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  			{
+  				internalType: "bytes32",
+  				name: "salt",
+  				type: "bytes32"
+  			},
+  			{
+  				internalType: "string",
+  				name: "name",
+  				type: "string"
+  			},
+  			{
+  				internalType: "string",
+  				name: "symbol",
+  				type: "string"
+  			},
+  			{
+  				internalType: "uint256",
+  				name: "royalty",
+  				type: "uint256"
+  			},
+  			{
+  				internalType: "bytes",
+  				name: "signature",
+  				type: "bytes"
+  			}
+  		],
+  		name: "createERC721",
+  		outputs: [
+  			{
+  				internalType: "address",
+  				name: "",
+  				type: "address"
+  			}
+  		],
+  		stateMutability: "payable",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  		],
+  		name: "dataRegistry",
+  		outputs: [
+  			{
+  				internalType: "contract Registry",
+  				name: "",
+  				type: "address"
+  			}
+  		],
+  		stateMutability: "view",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  			{
+  				internalType: "uint256",
+  				name: "price_",
+  				type: "uint256"
+  			}
+  		],
+  		name: "setDeployFee",
+  		outputs: [
+  		],
+  		stateMutability: "nonpayable",
+  		type: "function"
+  	}
+  ];
+  var Deployer = {
   	abi: abi
   };
 
+  /**
+   * @class
+   * @classdesc 
+   * Collection class.
+   * Before using the class, config is required to be initied
+   */
   class Collection {
     _contract = null;
     _type = null;
+
+    /**
+     * 
+     * @param {Object} Obj
+     * @param {string} Obj.salt Salt for the contract
+     * @param {string} Obj.signature Signature from server for the deployment
+     * @param {'ERC-721' | 'ERC-1155'} Obj.type Type of the contract
+     * @param {string} Obj.name Name of the collection, only used for ERC-721
+     * @param {string} Obj.symbol Symbol of the collection, only used for ERC-721
+     * @param {number} Obj.royalty Royalty for the collection in basis point (1/10000)
+     */
+    static async deploy({ salt, signature, type, name, symbol, royalty }) {
+      if (!config.deployerAddress)
+        throw new CollectionError("No deployer address", 500);
+      if (!wallet.signer) throw new CollectionError("No wallet connected", 401);
+      new Contract(config.deployerAddress, Deployer, wallet.signer);
+
+      if (type === "ERC-721") ; else if (type === "ERC-1155") ; else {
+        throw new CollectionError("Unknown collection type", 500);
+      }
+    }
 
     /**
      * Create collection instance
@@ -19801,14 +20014,14 @@
      * @param {string} [type] - Contract type, empty for auto-detect, manual set to avoid api call
      */
     constructor(address, type) {
-      if (!config.getProvider()) throw new Error("No provider inited");
+      if (!config.provider) throw new Error("No provider inited");
       this._inited = this._init(address, type);
     }
 
     async _init(address, type) {
       if (this._inited === true) return;
 
-      const provider = config.getProvider();
+      const provider = config.provider;
       if (!type) {
         const [isERC721, isERC1155] = await Promise.all([
           provider.call({
@@ -19830,13 +20043,13 @@
         this._contract = new Contract(
           address,
           ERC721.abi,
-          config.getProvider()
+          config.provider
         );
       } else if (type === "ERC-1155") {
         this._contract = new Contract(
           address,
           ERC1155.abi,
-          config.getProvider()
+          config.provider
         );
       } else {
         throw new CollectionError("Invalid contract type", 500);
@@ -19846,17 +20059,14 @@
     }
 
     /**
-     * Get if collection inited
-     * @returns {Promise<void>|boolean} Inited state or pending promise
+     * Get a promise if is initing, or boolean
      */
     get inited() {
       return this._inited;
     }
 
-
     /**
-     * Get collection type
-     * @returns {string} Collection type
+     * Get collection type, ERC-1155 or ERC-721
      */
     get type() {
       return this._type;
