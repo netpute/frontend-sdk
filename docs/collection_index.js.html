@@ -28,7 +28,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>import { CollectionError } from "./error";
 import { config } from "../config";
-import { ethers } from "ethers";
+import { Contract, ethers } from "ethers";
 import ERC721 from "./abi/CollectionERC721.json";
 import ERC1155 from "./abi/CollectionERC1155.json";
 import Deployer from "./abi/Deployer.json";
@@ -36,7 +36,7 @@ import { wallet } from "../wallet";
 
 /**
  * @class
- * @classdesc 
+ * @classdesc
  * Collection class.
  * Before using the class, config is required to be initied
  */
@@ -45,7 +45,7 @@ export class Collection {
   _type = null;
 
   /**
-   * 
+   *
    * @param {Object} Obj
    * @param {string} Obj.salt Salt for the contract
    * @param {string} Obj.signature Signature from server for the deployment
@@ -53,17 +53,112 @@ export class Collection {
    * @param {string} Obj.name Name of the collection, only used for ERC-721
    * @param {string} Obj.symbol Symbol of the collection, only used for ERC-721
    * @param {number} Obj.royalty Royalty for the collection in basis point (1/10000)
+   * @param {string} [Obj.expectedAddress] Expected address to be deploy, reject when different
    */
-  static async deploy({ salt, signature, type, name, symbol, royalty }) {
+  static async deploy({
+    salt,
+    signature,
+    type,
+    name,
+    symbol,
+    royalty,
+    expectedAddress,
+  }) {
     if (!config.deployerAddress)
-      throw new CollectionError("No deployer address", 500);
-    if (!wallet.signer) throw new CollectionError("No wallet connected", 401);
-    const deployer = new ethers.Contract(config.deployerAddress, Deployer, wallet.signer);
+      throw new CollectionError("No deployer address", 400);
+    if (!wallet.signer) throw new CollectionError("No wallet connected", 404);
+    const deployer = new ethers.Contract(
+      config.deployerAddress,
+      Deployer.abi,
+      wallet.signer
+    );
 
     if (type === "ERC-721") {
+      try {
+        // dry run to get address
+        const contractAddress = await deployer.callStatic.createERC721(
+          salt,
+          name,
+          symbol,
+          royalty,
+          signature,
+          { value: ethers.utils.parseEther("0.0006") }
+        );
+        if (
+          expectedAddress &amp;&amp;
+          contractAddress.toLowerCase() !== expectedAddress.toLowerCase()
+        )
+          throw new CollectionError("Not expected address", 403);
+
+        const newInstance = new Collection(contractAddress, "ERC-721");
+        newInstance.tx = await deployer.createERC721(
+          salt,
+          name,
+          symbol,
+          royalty,
+          signature,
+          { value: ethers.utils.parseEther("0.0006") }
+        );
+        newInstance._inited = newInstance.tx.wait();
+        return newInstance;
+      } catch (err) {
+        if (err.code === "INVALID_ARGUMENT")
+          throw new CollectionError("Input invalid", 400);
+        else if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
+          if (err.error &amp;&amp; err.error.message) {
+            throw new CollectionError(err.error.message, 400);
+          } else {
+            throw new CollectionError(err.error.message, 500);
+          }
+        } else if (err.code === 4001) {
+          // user denied transaction
+          throw new CollectionError(err.message, 400);
+        } else {
+          throw new CollectionError(err.message, 501);
+        }
+      }
     } else if (type === "ERC-1155") {
+      try {
+        // dry run to get address
+        const contractAddress = await deployer.callStatic.createERC1155(
+          salt,
+          royalty,
+          signature,
+          { value: ethers.utils.parseEther("0.0006") }
+        );
+        if (
+          expectedAddress &amp;&amp;
+          contractAddress.toLowerCase() !== expectedAddress.toLowerCase()
+        )
+          throw new CollectionError("Not expected address", 403);
+
+        const newInstance = new Collection(contractAddress, "ERC-1155");
+        newInstance.tx = await deployer.createERC1155(
+          salt,
+          royalty,
+          signature,
+          { value: ethers.utils.parseEther("0.0006") }
+        );
+        newInstance._inited = newInstance.tx.wait();
+        return newInstance;
+      } catch (err) {
+        if (err.code === "INVALID_ARGUMENT")
+          throw new CollectionError("Input invalid", 400);
+        else if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
+          if (err.error &amp;&amp; err.error.message) {
+            throw new CollectionError(err.error.message, 400);
+          } else {
+            throw new CollectionError(err.error.message, 500);
+          }
+        } else if (err.code === 4001) {
+          // user denied transaction
+          throw new CollectionError(err.message, 400);
+        } else {
+          throw new CollectionError(err.message, 501);
+        }
+      }
     } else {
-      throw new CollectionError("Unknown collection type", 500);
+      throw new CollectionError("Unknown collection type", 400);
     }
   }
 
@@ -130,6 +225,13 @@ export class Collection {
   get type() {
     return this._type;
   }
+
+  /**
+   * Get collection address
+   */
+  get address() {
+    return this._contract.address;
+  }
 }
 </code></pre>
         </article>
@@ -147,7 +249,7 @@ export class Collection {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Thu May 19 2022 03:11:09 GMT+0800 (Taipei Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Thu May 19 2022 10:28:51 GMT+0800 (Taipei Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

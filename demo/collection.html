@@ -9,7 +9,7 @@
     <script>
       netpute.config.init({
         rpc: "wss://rinkeby.infura.io/ws/v3/5ca338d679d5426dad18adec87e311a2",
-        deployerAddress: "0x024Ee439FC25141BEA77dFe69c24a10e597cD499",
+        deployerAddress: "0x0bdAD04A88b8Ef96F66ce41D65256F6a84a09b69",
       });
 
       let collection;
@@ -34,21 +34,21 @@
       async function onDeployButton() {
         try {
           collection = await netpute.Collection.deploy({
-            salt: document.getElementById("createe-erc721-salt").value,
-            signature: document.getElementById("createe-erc721-signature")
-              .value,
-            type: document.getElementById("createe-erc721-type").value,
-            name: document.getElementById("createe-erc721-name").value,
-            symbol: document.getElementById("createe-erc721-symbol").value,
+            salt: document.getElementById("create-erc721-salt").value,
+            signature: document.getElementById("create-erc721-signature").value,
+            type: document.getElementById("create-erc721-type").value,
+            name: document.getElementById("create-erc721-name").value,
+            symbol: document.getElementById("create-erc721-symbol").value,
             royalty: parseInt(
-              document.getElementById("createe-erc721-royalty").value
+              document.getElementById("create-erc721-royalty").value
             ),
             expectedAddress: document.getElementById(
-              "createe-erc721-expected-addr"
+              "create-erc721-expected-addr"
             ).value,
           });
-          document.getElementById("deploy-result").innerHTML +=
-            `Deploying... ${collection.tx.hash}<br />`;
+          document.getElementById(
+            "deploy-result"
+          ).innerHTML += `Deploying... ${collection.tx.hash}<br />`;
           await collection.inited;
           document.getElementById(
             "deploy-result"
@@ -57,6 +57,99 @@
           document.getElementById(
             "deploy-result"
           ).innerHTML += `deploy failed: ${err.code} ${err.message}<br />`;
+        }
+      }
+      async function onMintErc721Button() {
+        try {
+          const feeReceivers = document.getElementById(
+            "mint-erc721-fee-receivers"
+          ).value;
+          const fees = document.getElementById("mint-erc721-fees").value;
+          const tx = await collection.mint({
+            start: document.getElementById("mint-erc721-start").value,
+            amount: document.getElementById("mint-erc721-amount").value,
+            expire: document.getElementById("mint-erc721-expire").value,
+            target: document.getElementById("mint-erc721-target").value,
+            feeReceivers: feeReceivers.length ? feeReceivers.split("\n") : [],
+            fees: fees.length ? fees.split("\n") : [],
+            signature: document.getElementById("mint-erc721-signature").value,
+          });
+          document.getElementById(
+            "mint-erc721-result"
+          ).innerHTML += `Minting... ${tx.hash}<br />`;
+          await tx.wait();
+          document.getElementById(
+            "mint-erc721-result"
+          ).innerHTML += `Minted<br />`;
+        } catch (err) {
+          console.trace(err);
+          document.getElementById(
+            "mint-erc721-result"
+          ).innerHTML += `Mint failed: ${err.code} ${err.message}<br />`;
+        }
+      }
+      async function onMintErc1155Button() {
+        try {
+          const feeReceivers = document.getElementById(
+            "mint-erc1155-fee-receivers"
+          ).value;
+          const fees = document.getElementById("mint-erc1155-fees").value;
+          const tx = await collection.mint({
+            id: document.getElementById("mint-erc1155-id").value,
+            amount: document.getElementById("mint-erc1155-amount").value,
+            expire: document.getElementById("mint-erc1155-expire").value,
+            target: document.getElementById("mint-erc1155-target").value,
+            feeReceivers: feeReceivers.length ? feeReceivers.split("\n") : [],
+            fees: fees.length ? fees.split("\n") : [],
+            signature: document.getElementById("mint-erc1155-signature").value,
+            nonce: document.getElementById("mint-erc1155-nonce").value,
+          });
+          document.getElementById(
+            "mint-erc1155-result"
+          ).innerHTML += `Minting... ${tx.hash}<br />`;
+          await tx.wait();
+          document.getElementById(
+            "mint-erc1155-result"
+          ).innerHTML += `Minted<br />`;
+        } catch (err) {
+          console.trace(err);
+          document.getElementById(
+            "mint-erc1155-result"
+          ).innerHTML += `Mint failed: ${err.code} ${err.message}<br />`;
+        }
+      }
+      async function onMintErc1155BatchButton() {
+        try {
+          const ids = document.getElementById(
+            "mint-erc1155b-ids"
+          ).value;
+          const amounts = document.getElementById("mint-erc1155b-amounts").value;
+          const feeReceivers = document.getElementById(
+            "mint-erc1155b-fee-receivers"
+          ).value;
+          const fees = document.getElementById("mint-erc1155b-fees").value;
+          const tx = await collection.mint({
+            ids: ids.length ? ids.split("\n") : [],
+            amounts: amounts.length ? amounts.split("\n") : [],
+            expire: document.getElementById("mint-erc1155b-expire").value,
+            target: document.getElementById("mint-erc1155b-target").value,
+            feeReceivers: feeReceivers.length ? feeReceivers.split("\n") : [],
+            fees: fees.length ? fees.split("\n") : [],
+            signature: document.getElementById("mint-erc1155b-signature").value,
+            nonce: document.getElementById("mint-erc1155b-nonce").value,
+          });
+          document.getElementById(
+            "mint-erc1155b-result"
+          ).innerHTML += `Minting... ${tx.hash}<br />`;
+          await tx.wait();
+          document.getElementById(
+            "mint-erc1155b-result"
+          ).innerHTML += `Minted<br />`;
+        } catch (err) {
+          console.trace(err);
+          document.getElementById(
+            "mint-erc1155b-result"
+          ).innerHTML += `Mint failed: ${err.code} ${err.message}<br />`;
         }
       }
     </script>
@@ -70,6 +163,7 @@
         Connect Wallet
       </button>
       <div>
+        <h2>Init with address and type</h2>
         <input type="text" id="address-input" placeholder="0x..." />
         <input
           type="text"
@@ -83,41 +177,180 @@
         </div>
       </div>
       <div>
-        <input type="text" id="createe-erc721-salt" placeholder="Salt" /><br />
+        <h2>Deploy</h2>
+        <input type="text" id="create-erc721-salt" placeholder="Salt" /><br />
         <input
           type="text"
-          id="createe-erc721-signature"
+          id="create-erc721-signature"
           placeholder="Signature"
         /><br />
         <input
           type="text"
-          id="createe-erc721-type"
+          id="create-erc721-type"
           placeholder="ERC-721 or ERC-1155"
         /><br />
         <input
           type="text"
-          id="createe-erc721-name"
+          id="create-erc721-name"
           placeholder="Name for ERC-721"
         /><br />
         <input
           type="text"
-          id="createe-erc721-symbol"
+          id="create-erc721-symbol"
           placeholder="Symbol for ERC-721"
         /><br />
         <input
           type="number"
-          id="createe-erc721-royalty"
+          id="create-erc721-royalty"
           placeholder="Royalty in basis (1/10000)"
         /><br />
         <input
           type="text"
-          id="createe-erc721-expected-addr"
+          id="create-erc721-expected-addr"
           placeholder="(Optional) Expected address"
         /><br />
         <button onclick="onDeployButton()">Deploy</button>
         <div>
           Result:
           <p id="deploy-result"></p>
+        </div>
+      </div>
+      <div>
+        <h2>Mint ERC721</h2>
+        <p>Init or deploy first</p>
+        <input type="number" id="mint-erc721-start" placeholder="Start" /><br />
+        <input
+          type="number"
+          id="mint-erc721-amount"
+          placeholder="Amount"
+        /><br />
+        <input
+          type="number"
+          id="mint-erc721-expire"
+          placeholder="Expire"
+        /><br />
+        <input type="text" id="mint-erc721-target" placeholder="Target" /><br />
+        <textarea
+          id="mint-erc721-fee-receivers"
+          cols="30"
+          rows="10"
+          placeholder="Fee receivers, 1 address per line"
+        ></textarea
+        ><br />
+        <textarea
+          id="mint-erc721-fees"
+          cols="30"
+          rows="10"
+          placeholder="Fees, 1 fee per line"
+        ></textarea
+        ><br />
+        <input
+          type="text"
+          id="mint-erc721-signature"
+          placeholder="Signature"
+        /><br />
+        <button onclick="onMintErc721Button()">Mint</button>
+        <div>
+          Result:
+          <p id="mint-erc721-result"></p>
+        </div>
+      </div>
+      <div>
+        <h2>Mint ERC1155 Single</h2>
+        <p>Init or deploy first</p>
+        <input type="number" id="mint-erc1155-id" placeholder="id" /><br />
+        <input
+          type="number"
+          id="mint-erc1155-amount"
+          placeholder="Amount"
+        /><br />
+        <input
+          type="number"
+          id="mint-erc1155-expire"
+          placeholder="Expire"
+        /><br />
+        <input
+          type="text"
+          id="mint-erc1155-target"
+          placeholder="Target"
+        /><br />
+        <textarea
+          id="mint-erc1155-fee-receivers"
+          cols="30"
+          rows="10"
+          placeholder="Fee receivers, 1 address per line"
+        ></textarea
+        ><br />
+        <textarea
+          id="mint-erc1155-fees"
+          cols="30"
+          rows="10"
+          placeholder="Fees, 1 address per line"
+        ></textarea
+        ><br />
+        <input type="text" id="mint-erc1155-nonce" placeholder="Nonce" /><br />
+        <input
+          type="text"
+          id="mint-erc1155-signature"
+          placeholder="Signature"
+        /><br />
+        <button onclick="onMintErc1155Button()">Mint</button>
+        <div>
+          Result:
+          <p id="mint-erc1155-result"></p>
+        </div>
+      </div>
+      <div>
+        <h2>Mint ERC1155 Batch</h2>
+        <p>Init or deploy first</p>
+        <textarea
+          id="mint-erc1155b-ids"
+          cols="30"
+          rows="10"
+          placeholder="Token ID, 1 id per line"
+        ></textarea
+        ><br />
+        <textarea
+          id="mint-erc1155b-amounts"
+          cols="30"
+          rows="10"
+          placeholder="Token amount, 1 amount per line"
+        ></textarea
+        ><br />
+        <input
+          type="number"
+          id="mint-erc1155b-expire"
+          placeholder="Expire"
+        /><br />
+        <input
+          type="text"
+          id="mint-erc1155b-target"
+          placeholder="Target"
+        /><br />
+        <textarea
+          id="mint-erc1155b-fee-receivers"
+          cols="30"
+          rows="10"
+          placeholder="Fee receivers, 1 address per line"
+        ></textarea
+        ><br />
+        <textarea
+          id="mint-erc1155b-fees"
+          cols="30"
+          rows="10"
+          placeholder="Fees, 1 address per line"
+        ></textarea
+        ><br />
+        <input type="text" id="mint-erc1155b-nonce" placeholder="Nonce" /><br />
+        <input
+          type="text"
+          id="mint-erc1155b-signature"
+          placeholder="Signature"
+        /><br />
+        <button onclick="onMintErc1155BatchButton()">Mint</button>
+        <div>
+          Result:
+          <p id="mint-erc1155b-result"></p>
         </div>
       </div>
     </section>

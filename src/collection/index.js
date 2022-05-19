@@ -114,20 +114,7 @@ export class Collection {
         newInstance._inited = newInstance.tx.wait();
         return newInstance;
       } catch (err) {
-        if (err.code === "INVALID_ARGUMENT")
-          throw new CollectionError("Input invalid", 400);
-        else if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
-          if (err.error && err.error.message) {
-            throw new CollectionError(err.error.message, 400);
-          } else {
-            throw new CollectionError(err.error.message, 500);
-          }
-        } else if (err.code === 4001) {
-          // user denied transaction
-          throw new CollectionError(err.message, 400);
-        } else {
-          throw new CollectionError(err.message, 501);
-        }
+        this._errorHandler(err);
       }
     } else {
       throw new CollectionError("Unknown collection type", 400);
@@ -140,8 +127,103 @@ export class Collection {
    * @param {string} [type] - Contract type, empty for auto-detect, manual set to avoid api call
    */
   constructor(address, type) {
-    if (!config.provider) throw new Error("No provider inited");
+    // config.init has to be called before creating a collection instance
+    if (!config.provider) throw new CollectionError("No provider inited", 400);
     this._inited = this._init(address, type);
+  }
+
+  mint(obj) {
+    if (this.type === "ERC-721") return this._mintERC721(obj);
+    else if (this.type === "ERC-1155") return this._mintERC1155(obj);
+    else throw new CollectionError("Contract not inited", 400);
+  }
+
+  async _mintERC721({
+    start,
+    amount,
+    expire,
+    target,
+    feeReceivers,
+    fees,
+    signature,
+  }) {
+    if (!netpute.wallet.signer)
+      throw new CollectionError("Signer not found", 404);
+
+    const contract = this._contract.connect(netpute.wallet.signer);
+    try {
+      const tx = await contract.mint(
+        start,
+        amount,
+        expire,
+        target,
+        feeReceivers || [],
+        fees || [],
+        signature,
+        {
+          value: fees ? fees.reduce((a, b) => a + parseInt(b), 0) : 0,
+        }
+      );
+      return tx;
+    } catch (err) {
+      this._errorHandler(err);
+    }
+  }
+
+  async _mintERC1155({
+    id,
+    ids,
+    amount,
+    amounts,
+    expire,
+    target,
+    feeReceivers,
+    fees,
+    nonce,
+    signature,
+  }) {
+    if (!netpute.wallet.signer)
+      throw new CollectionError("Signer not found", 404);
+    const [single, batch] = [!!(id && amount), !!(ids && amounts)];
+    if (!(single ^ batch))
+      throw new CollectionError(
+        "ID + Amount and IDs + Amounts cannot be both provided",
+        400
+      );
+
+    const contract = this._contract.connect(netpute.wallet.signer);
+    try {
+      const tx = single
+        ? await contract.mint(
+            id,
+            amount,
+            expire,
+            target,
+            feeReceivers || [],
+            fees || [],
+            nonce,
+            signature,
+            {
+              value: fees ? fees.reduce((a, b) => a + parseInt(b), 0) : 0,
+            }
+          )
+        : await contract.mintBatch(
+            ids,
+            amounts,
+            expire,
+            target,
+            feeReceivers || [],
+            fees || [],
+            nonce,
+            signature,
+            {
+              value: fees ? fees.reduce((a, b) => a + parseInt(b), 0) : 0,
+            }
+          );
+      return tx;
+    } catch (err) {
+      this._errorHandler(err);
+    }
   }
 
   async _init(address, type) {
@@ -182,6 +264,23 @@ export class Collection {
     }
     this._type = type;
     this._inited = true;
+  }
+
+  _errorHandler(err) {
+    if (err.code === "INVALID_ARGUMENT")
+      throw new CollectionError("Input invalid", 400);
+    else if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
+      if (err.error && err.error.message) {
+        throw new CollectionError(err.error.message, 400);
+      } else {
+        throw new CollectionError(err.error.message, 500);
+      }
+    } else if (err.code === 4001) {
+      // user denied transaction
+      throw new CollectionError(err.message, 400);
+    } else {
+      throw new CollectionError(err.message, 501);
+    }
   }
 
   /**
