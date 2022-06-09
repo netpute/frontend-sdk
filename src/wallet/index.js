@@ -113,7 +113,7 @@ class Wallet extends EventTarget {
   /**
    * Ask user to switch to a chain
    * @param {number | string} chainId - Target chain id
-   * @param {NetworkConfig} [chainConfig] - Chain config is used to ask user to add when network doesn't exist
+   * @param {Wallet.NetworkConfig} [chainConfig] - Chain config is used to ask user to add when network doesn't exist
    */
   async switchNetwork(chainId, chainConfig) {
     if (!this._provider) {
@@ -190,10 +190,11 @@ export const wallet = new Wallet();
 /**
  * Network Config according to EIP-3085
  * @typedef {Object} NetworkConfig
+ * @memberof Wallet
  * @property {string} chainId - Chain ID
  * @property {string[]} [blockExplorerUrls] - Blockchain explorer url (e.g. Etherscan)
  * @property {string} [chainName] - Chain Name
- * @property {NetworkConfigNativeCurrency} [nativeCurrency] - Chain Name
+ * @property {Wallet.NetworkConfigNativeCurrency} [nativeCurrency] - Chain Name
  * @property {string[]} [iconUrls] - Icon urls
  * @property {string[]} [rpcUrls] - Chain RPC urls
  */
@@ -201,6 +202,7 @@ export const wallet = new Wallet();
 /**
  * Currency Config to a network config
  * @typedef {Object} NetworkConfigNativeCurrency
+ * @memberof Wallet
  * @property {string} name - Chain currency name
  * @property {string} symbol - Chain currency symbol
  * @property {number} decimals - Chain currency decimals
@@ -214,14 +216,17 @@ export const wallet = new Wallet();
 /**
  * Wallet changed
  * @event Wallet#walletchanged
+ * @memberof Wallet
  */
 
 /**
  * Network changed, there might be a delay
  * @event Wallet#networkchanged
+ * @memberof Wallet
  */
 
 /**
  * Wallet disconnected by user (note: disconnect function won't trigger this event)
  * @event Wallet#disconnected
+ * @memberof Wallet
  */

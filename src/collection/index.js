@@ -132,6 +132,10 @@ export class Collection {
     this._inited = this._init(address, type);
   }
 
+  /**
+   * Mint tokens
+   * @param {Collection.MintConfigERC721 | Collection.MintConfigERC1155} obj - Mint Object
+   */
   mint(obj) {
     if (this.type === "ERC-721") return this._mintERC721(obj);
     else if (this.type === "ERC-1155") return this._mintERC1155(obj);
@@ -304,3 +308,32 @@ export class Collection {
     return this._contract.address;
   }
 }
+
+/**
+ * Object to mint an ERC721 token 
+ * @typedef {Object} MintConfigERC721
+ * @memberof Collection
+ * @property {number} start - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {number} amount - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {number} expire - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {string} target - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {string[]} [feeReceivers] - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {number[]} [fees] - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {string} signature - Contract type, empty for auto-detect, manual set to avoid api call
+ */
+
+/**
+ * Object to mint ERC1155 tokens
+ * @typedef {Object} MintConfigERC1155
+ * @memberof Collection
+ * @property {number} id - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {number} ids - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {number} amount - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {number} amounts - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {number} expire - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {string} target - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {string[]} [feeReceivers] - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {number[]} [fees] - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {number} nonce - Contract type, empty for auto-detect, manual set to avoid api call
+ * @property {string} signature - Contract type, empty for auto-detect, manual set to avoid api call
+ */
