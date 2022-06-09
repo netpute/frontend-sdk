@@ -1,6 +1,6 @@
 import { CollectionError } from "./error";
 import { config } from "../config";
-import { Contract, ethers } from "ethers";
+import { ethers } from "ethers";
 import ERC721 from "./abi/CollectionERC721.json";
 import ERC1155 from "./abi/CollectionERC1155.json";
 import Deployer from "./abi/Deployer.json";
@@ -147,10 +147,10 @@ export class Collection {
     fees,
     signature,
   }) {
-    if (!netpute.wallet.signer)
+    if (!wallet.signer)
       throw new CollectionError("Signer not found", 404);
 
-    const contract = this._contract.connect(netpute.wallet.signer);
+    const contract = this._contract.connect(wallet.signer);
     try {
       const tx = await contract.mint(
         start,
@@ -182,7 +182,7 @@ export class Collection {
     nonce,
     signature,
   }) {
-    if (!netpute.wallet.signer)
+    if (!wallet.signer)
       throw new CollectionError("Signer not found", 404);
     const [single, batch] = [!!(id && amount), !!(ids && amounts)];
     if (!(single ^ batch))
@@ -191,7 +191,7 @@ export class Collection {
         400
       );
 
-    const contract = this._contract.connect(netpute.wallet.signer);
+    const contract = this._contract.connect(wallet.signer);
     try {
       const tx = single
         ? await contract.mint(
