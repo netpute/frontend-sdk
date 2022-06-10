@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Netpute JS Demo</title>
+    <script src="./netpute.umd.js"></script>
+    <script>
+      netpute.config.init({
+        rpc: "wss://rinkeby.infura.io/ws/v3/5ca338d679d5426dad18adec87e311a2",
+        deployerAddress: "0x872d22e650c2AEc53eAF90F65AB4D5991165B65C",
+        marketplaceAddress: "0xab65e9Bc4B89758c8553ea08e035b41C2B5728f6",
+      });
+
+      function onSignBuyButton() {
+        netpute.marketplace
+          .signBuyOrder({
+            collectionAddress: document.getElementById("buyorder-collection")
+              .value,
+            validBefore: document.getElementById("buyorder-validBefore").value,
+            tokenId: document.getElementById("buyorder-tokenId").value,
+            amount: document.getElementById("buyorder-amount").value,
+            price: document.getElementById("buyorder-price").value,
+            nonce: document.getElementById("buyorder-nonce").value,
+          })
+          .then(
+            (result) =>
+              (document.getElementById(
+                "signbuy-result"
+              ).innerHTML += `Sign result: ${result}<br />`)
+          )
+          .catch(
+            (err) =>
+              (document.getElementById(
+                "signbuy-result"
+              ).innerHTML += `Sign failed: ${err.code} ${err.message}<br />`)
+          );
+      }
+
+      function onSignSellButton() {
+        netpute.marketplace
+          .signSellOrder({
+            collectionAddress: document.getElementById("sellorder-collection")
+              .value,
+            validBefore: document.getElementById("sellorder-validBefore").value,
+            tokenId: document.getElementById("sellorder-tokenId").value,
+            amount: document.getElementById("sellorder-amount").value,
+            price: document.getElementById("sellorder-price").value,
+            nonce: document.getElementById("sellorder-nonce").value,
+          })
+          .then(
+            (result) =>
+              (document.getElementById(
+                "signsell-result"
+              ).innerHTML += `Sign result: ${result}<br />`)
+          )
+          // .catch(
+          //   (err) =>
+          //     (document.getElementById(
+          //       "signsell-result"
+          //     ).innerHTML += `Sign failed: ${err.code} ${err.message}<br />`)
+          // );
+      }
+    </script>
+  </head>
+  <body>
+    <section>
+      <h2>Marketplace</h2>
+      <button
+        onclick="netpute.wallet.connect().then(() => this.innerText = `Connected: ${netpute.wallet.address}`)"
+      >
+        Connect Wallet
+      </button>
+      <div>
+        <div>
+          <h2>Sign Buy Order</h2>
+          <input
+            type="text"
+            id="buyorder-collection"
+            placeholder="Collection Address"
+          /><br />
+          <input
+            type="number"
+            id="buyorder-validBefore"
+            placeholder="Valid before"
+            value="2000000000"
+          /><br />
+          <input
+            type="number"
+            id="buyorder-tokenId"
+            placeholder="Token Id"
+          /><br />
+          <input
+            type="number"
+            id="buyorder-amount"
+            placeholder="Amount"
+          /><br />
+          <input type="number" id="buyorder-price" placeholder="price" /><br />
+          <input type="number" id="buyorder-nonce" placeholder="Nonce" /><br />
+          <button onclick="onSignBuyButton()">Sign Buy</button>
+          <div>
+            Result:
+            <p id="signbuy-result"></p>
+          </div>
+        </div>
+        <div>
+          <h2>Sign sell Order</h2>
+          <input
+            type="text"
+            id="sellorder-collection"
+            placeholder="Collection Address"
+          /><br />
+          <input
+            type="number"
+            id="sellorder-validBefore"
+            placeholder="Valid before"
+            value="2000000000"
+          /><br />
+          <input
+            type="number"
+            id="sellorder-tokenId"
+            placeholder="Token Id"
+          /><br />
+          <input
+            type="number"
+            id="sellorder-amount"
+            placeholder="Amount"
+          /><br />
+          <input type="number" id="sellorder-price" placeholder="price" /><br />
+          <input type="number" id="sellorder-nonce" placeholder="Nonce" /><br />
+          <button onclick="onSignSellButton()">Sign sell</button>
+          <div>
+            Result:
+            <p id="signsell-result"></p>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+  </body>
+</html>

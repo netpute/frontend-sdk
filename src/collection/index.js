@@ -307,6 +307,13 @@ export class Collection {
   get address() {
     return this._contract.address;
   }
+
+  /**
+   * Get ethers.js Contract instance
+   */
+  get contract() {
+    return this._contract;
+  }
 }
 
 /**

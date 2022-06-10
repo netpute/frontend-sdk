@@ -7,6 +7,7 @@ import { ethers } from "ethers";
 class Config {
   _provider = null;
   _deployer = null;
+  _marketplaceAddress = null;
 
   /**
    * Init config for other components. Re-init is possible when network was changed
@@ -14,7 +15,7 @@ class Config {
    * @param {string} Obj.rpc Read-only RPC url, websocket (wss) or https is acceptable
    * @param {string} Obj.deployerAddress Address of deployer
    */
-  init({ rpc, deployerAddress }) {
+  init({ rpc, deployerAddress, marketplaceAddress }) {
     if (rpc.startsWith("wss://"))
       this._provider = new ethers.providers.WebSocketProvider(rpc);
     else if (rpc.startsWith("https://"))
@@ -22,6 +23,7 @@ class Config {
     else throw new Error("Unknown protocol");
 
     this._deployer = deployerAddress;
+    this._marketplaceAddress = marketplaceAddress;
   }
 
   /**
@@ -36,6 +38,13 @@ class Config {
    */
   get deployerAddress() {
     return this._deployer;
+  }
+
+  /**
+   * Marketplace address
+   */
+   get marketplaceAddress() {
+    return this._marketplaceAddress;
   }
 }
 

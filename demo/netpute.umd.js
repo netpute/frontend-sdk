@@ -18624,7 +18624,7 @@
     /**
      * Ask user to switch to a chain
      * @param {number | string} chainId - Target chain id
-     * @param {NetworkConfig} [chainConfig] - Chain config is used to ask user to add when network doesn't exist
+     * @param {Wallet.NetworkConfig} [chainConfig] - Chain config is used to ask user to add when network doesn't exist
      */
     async switchNetwork(chainId, chainConfig) {
       if (!this._provider) {
@@ -18701,10 +18701,11 @@
   /**
    * Network Config according to EIP-3085
    * @typedef {Object} NetworkConfig
+   * @memberof Wallet
    * @property {string} chainId - Chain ID
    * @property {string[]} [blockExplorerUrls] - Blockchain explorer url (e.g. Etherscan)
    * @property {string} [chainName] - Chain Name
-   * @property {NetworkConfigNativeCurrency} [nativeCurrency] - Chain Name
+   * @property {Wallet.NetworkConfigNativeCurrency} [nativeCurrency] - Chain Name
    * @property {string[]} [iconUrls] - Icon urls
    * @property {string[]} [rpcUrls] - Chain RPC urls
    */
@@ -18712,6 +18713,7 @@
   /**
    * Currency Config to a network config
    * @typedef {Object} NetworkConfigNativeCurrency
+   * @memberof Wallet
    * @property {string} name - Chain currency name
    * @property {string} symbol - Chain currency symbol
    * @property {number} decimals - Chain currency decimals
@@ -18725,23 +18727,26 @@
   /**
    * Wallet changed
    * @event Wallet#walletchanged
+   * @memberof Wallet
    */
 
   /**
    * Network changed, there might be a delay
    * @event Wallet#networkchanged
+   * @memberof Wallet
    */
 
   /**
    * Wallet disconnected by user (note: disconnect function won't trigger this event)
    * @event Wallet#disconnected
+   * @memberof Wallet
    */
 
   class CollectionError extends Error {
     constructor(message, code) {
       super(message);
       this.code = code;
-      this.name = "WalletError";
+      this.name = "CollectionError";
     }
   }
 
@@ -18752,6 +18757,7 @@
   class Config {
     _provider = null;
     _deployer = null;
+    _marketplaceAddress = null;
 
     /**
      * Init config for other components. Re-init is possible when network was changed
@@ -18759,7 +18765,7 @@
      * @param {string} Obj.rpc Read-only RPC url, websocket (wss) or https is acceptable
      * @param {string} Obj.deployerAddress Address of deployer
      */
-    init({ rpc, deployerAddress }) {
+    init({ rpc, deployerAddress, marketplaceAddress }) {
       if (rpc.startsWith("wss://"))
         this._provider = new WebSocketProvider(rpc);
       else if (rpc.startsWith("https://"))
@@ -18767,6 +18773,7 @@
       else throw new Error("Unknown protocol");
 
       this._deployer = deployerAddress;
+      this._marketplaceAddress = marketplaceAddress;
     }
 
     /**
@@ -18782,11 +18789,18 @@
     get deployerAddress() {
       return this._deployer;
     }
+
+    /**
+     * Marketplace address
+     */
+     get marketplaceAddress() {
+      return this._marketplaceAddress;
+    }
   }
 
   const config = new Config();
 
-  var abi$2 = [
+  var abi$4 = [
   	{
   		inputs: [
   			{
@@ -19453,10 +19467,10 @@
   	}
   ];
   var ERC721 = {
-  	abi: abi$2
+  	abi: abi$4
   };
 
-  var abi$1 = [
+  var abi$3 = [
   	{
   		inputs: [
   			{
@@ -20107,10 +20121,10 @@
   	}
   ];
   var ERC1155 = {
-  	abi: abi$1
+  	abi: abi$3
   };
 
-  var abi = [
+  var abi$2 = [
   	{
   		inputs: [
   			{
@@ -20268,7 +20282,7 @@
   	}
   ];
   var Deployer = {
-  	abi: abi
+  	abi: abi$2
   };
 
   /**
@@ -20397,6 +20411,10 @@
       this._inited = this._init(address, type);
     }
 
+    /**
+     * Mint tokens
+     * @param {Collection.MintConfigERC721 | Collection.MintConfigERC1155} obj - Mint Object
+     */
     mint(obj) {
       if (this.type === "ERC-721") return this._mintERC721(obj);
       else if (this.type === "ERC-1155") return this._mintERC1155(obj);
@@ -20412,10 +20430,10 @@
       fees,
       signature,
     }) {
-      if (!netpute.wallet.signer)
+      if (!wallet.signer)
         throw new CollectionError("Signer not found", 404);
 
-      const contract = this._contract.connect(netpute.wallet.signer);
+      const contract = this._contract.connect(wallet.signer);
       try {
         const tx = await contract.mint(
           start,
@@ -20447,7 +20465,7 @@
       nonce,
       signature,
     }) {
-      if (!netpute.wallet.signer)
+      if (!wallet.signer)
         throw new CollectionError("Signer not found", 404);
       const [single, batch] = [!!(id && amount), !!(ids && amounts)];
       if (!(single ^ batch))
@@ -20456,7 +20474,7 @@
           400
         );
 
-      const contract = this._contract.connect(netpute.wallet.signer);
+      const contract = this._contract.connect(wallet.signer);
       try {
         const tx = single
           ? await contract.mint(
@@ -20568,10 +20586,933 @@
     get address() {
       return this._contract.address;
     }
+
+    /**
+     * Get ethers.js Contract instance
+     */
+    get contract() {
+      return this._contract;
+    }
   }
 
+  /**
+   * Object to mint an ERC721 token 
+   * @typedef {Object} MintConfigERC721
+   * @memberof Collection
+   * @property {number} start - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {number} amount - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {number} expire - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {string} target - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {string[]} [feeReceivers] - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {number[]} [fees] - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {string} signature - Contract type, empty for auto-detect, manual set to avoid api call
+   */
+
+  /**
+   * Object to mint ERC1155 tokens
+   * @typedef {Object} MintConfigERC1155
+   * @memberof Collection
+   * @property {number} id - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {number} ids - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {number} amount - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {number} amounts - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {number} expire - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {string} target - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {string[]} [feeReceivers] - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {number[]} [fees] - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {number} nonce - Contract type, empty for auto-detect, manual set to avoid api call
+   * @property {string} signature - Contract type, empty for auto-detect, manual set to avoid api call
+   */
+
+  class MarketplaceError extends Error {
+    constructor(message, code) {
+      super(message);
+      this.code = code;
+      this.name = "MarketplaceError";
+    }
+  }
+
+  const typedMessage = {
+    domain: {
+        name: "NetputeMarketplace",
+        version: "1",
+    },
+    types: {
+        EIP712Domain: [
+            { name: "name", type: "string" },
+            { name: "version", type: "string" },
+            { name: "chainId", type: "uint256" },
+            { name: "verifyingContract", type: "address" },
+        ],
+        SellOrder: [
+            { name: "seller", type: "address" },
+            { name: "validBefore", type: "uint256" },
+            { name: "collection", type: "address" },
+            { name: "tokenId", type: "uint256" },
+            { name: "amount", type: "uint256" },
+            { name: "minReceive", type: "uint256" },
+            { name: "nonce", type: "uint256" },
+        ],
+        BuyOrder: [
+            { name: "buyer", type: "address" },
+            { name: "validBefore", type: "uint256" },
+            { name: "collection", type: "address" },
+            { name: "tokenId", type: "uint256" },
+            { name: "amount", type: "uint256" },
+            { name: "maxPayment", type: "uint256" },
+            { name: "nonce", type: "uint256" },
+        ],
+    },
+  };
+
+  var abi$1 = [
+  	{
+  		inputs: [
+  			{
+  				internalType: "contract Registry",
+  				name: "registry_",
+  				type: "address"
+  			},
+  			{
+  				internalType: "contract IERC20",
+  				name: "WETH_",
+  				type: "address"
+  			}
+  		],
+  		stateMutability: "nonpayable",
+  		type: "constructor"
+  	},
+  	{
+  		anonymous: false,
+  		inputs: [
+  			{
+  				indexed: true,
+  				internalType: "bytes32",
+  				name: "matchId",
+  				type: "bytes32"
+  			},
+  			{
+  				indexed: true,
+  				internalType: "address",
+  				name: "buyer",
+  				type: "address"
+  			},
+  			{
+  				indexed: true,
+  				internalType: "address",
+  				name: "seller",
+  				type: "address"
+  			},
+  			{
+  				indexed: false,
+  				internalType: "uint256",
+  				name: "price",
+  				type: "uint256"
+  			}
+  		],
+  		name: "OrderMatched",
+  		type: "event"
+  	},
+  	{
+  		anonymous: false,
+  		inputs: [
+  			{
+  				indexed: true,
+  				internalType: "bytes32",
+  				name: "matchId",
+  				type: "bytes32"
+  			},
+  			{
+  				indexed: true,
+  				internalType: "address",
+  				name: "collection",
+  				type: "address"
+  			},
+  			{
+  				indexed: true,
+  				internalType: "uint256",
+  				name: "tokenId",
+  				type: "uint256"
+  			},
+  			{
+  				indexed: false,
+  				internalType: "uint256",
+  				name: "amount",
+  				type: "uint256"
+  			}
+  		],
+  		name: "TransferOnSale",
+  		type: "event"
+  	},
+  	{
+  		inputs: [
+  			{
+  				components: [
+  					{
+  						internalType: "address",
+  						name: "buyer",
+  						type: "address"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "validBefore",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "address",
+  						name: "collection",
+  						type: "address"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "tokenId",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "amount",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "maxPayment",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "nonce",
+  						type: "uint256"
+  					}
+  				],
+  				internalType: "struct BuyOrder",
+  				name: "_input",
+  				type: "tuple"
+  			}
+  		],
+  		name: "GET_BUYORDER_PACKETHASH",
+  		outputs: [
+  			{
+  				internalType: "bytes32",
+  				name: "",
+  				type: "bytes32"
+  			}
+  		],
+  		stateMutability: "pure",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  			{
+  				components: [
+  					{
+  						internalType: "string",
+  						name: "name",
+  						type: "string"
+  					},
+  					{
+  						internalType: "string",
+  						name: "version",
+  						type: "string"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "chainId",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "address",
+  						name: "verifyingContract",
+  						type: "address"
+  					}
+  				],
+  				internalType: "struct EIP712Domain",
+  				name: "_input",
+  				type: "tuple"
+  			}
+  		],
+  		name: "GET_EIP712DOMAIN_PACKETHASH",
+  		outputs: [
+  			{
+  				internalType: "bytes32",
+  				name: "",
+  				type: "bytes32"
+  			}
+  		],
+  		stateMutability: "pure",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  			{
+  				components: [
+  					{
+  						internalType: "address",
+  						name: "seller",
+  						type: "address"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "validBefore",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "address",
+  						name: "collection",
+  						type: "address"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "tokenId",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "amount",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "minReceive",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "nonce",
+  						type: "uint256"
+  					}
+  				],
+  				internalType: "struct SellOrder",
+  				name: "_input",
+  				type: "tuple"
+  			}
+  		],
+  		name: "GET_SELLORDER_PACKETHASH",
+  		outputs: [
+  			{
+  				internalType: "bytes32",
+  				name: "",
+  				type: "bytes32"
+  			}
+  		],
+  		stateMutability: "pure",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  		],
+  		name: "WETH",
+  		outputs: [
+  			{
+  				internalType: "contract IERC20",
+  				name: "",
+  				type: "address"
+  			}
+  		],
+  		stateMutability: "view",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  		],
+  		name: "domainHash",
+  		outputs: [
+  			{
+  				internalType: "bytes32",
+  				name: "",
+  				type: "bytes32"
+  			}
+  		],
+  		stateMutability: "view",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  			{
+  				components: [
+  					{
+  						internalType: "address",
+  						name: "buyer",
+  						type: "address"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "validBefore",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "address",
+  						name: "collection",
+  						type: "address"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "tokenId",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "amount",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "maxPayment",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "nonce",
+  						type: "uint256"
+  					}
+  				],
+  				internalType: "struct BuyOrder",
+  				name: "buyOrder",
+  				type: "tuple"
+  			}
+  		],
+  		name: "getBuyOrderHash",
+  		outputs: [
+  			{
+  				internalType: "bytes32",
+  				name: "",
+  				type: "bytes32"
+  			}
+  		],
+  		stateMutability: "view",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  			{
+  				components: [
+  					{
+  						internalType: "address",
+  						name: "seller",
+  						type: "address"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "validBefore",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "address",
+  						name: "collection",
+  						type: "address"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "tokenId",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "amount",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "minReceive",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "nonce",
+  						type: "uint256"
+  					}
+  				],
+  				internalType: "struct SellOrder",
+  				name: "sellOrder",
+  				type: "tuple"
+  			}
+  		],
+  		name: "getSellOrderHash",
+  		outputs: [
+  			{
+  				internalType: "bytes32",
+  				name: "",
+  				type: "bytes32"
+  			}
+  		],
+  		stateMutability: "view",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  			{
+  				internalType: "address",
+  				name: "",
+  				type: "address"
+  			},
+  			{
+  				internalType: "bytes32",
+  				name: "",
+  				type: "bytes32"
+  			}
+  		],
+  		name: "invalided",
+  		outputs: [
+  			{
+  				internalType: "bool",
+  				name: "",
+  				type: "bool"
+  			}
+  		],
+  		stateMutability: "view",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  			{
+  				internalType: "bytes32",
+  				name: "hash_",
+  				type: "bytes32"
+  			}
+  		],
+  		name: "markAsInvalid",
+  		outputs: [
+  		],
+  		stateMutability: "nonpayable",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  			{
+  				components: [
+  					{
+  						internalType: "address",
+  						name: "seller",
+  						type: "address"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "validBefore",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "address",
+  						name: "collection",
+  						type: "address"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "tokenId",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "amount",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "minReceive",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "nonce",
+  						type: "uint256"
+  					}
+  				],
+  				internalType: "struct SellOrder",
+  				name: "sellOrder",
+  				type: "tuple"
+  			},
+  			{
+  				components: [
+  					{
+  						internalType: "address",
+  						name: "buyer",
+  						type: "address"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "validBefore",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "address",
+  						name: "collection",
+  						type: "address"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "tokenId",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "amount",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "maxPayment",
+  						type: "uint256"
+  					},
+  					{
+  						internalType: "uint256",
+  						name: "nonce",
+  						type: "uint256"
+  					}
+  				],
+  				internalType: "struct BuyOrder",
+  				name: "buyOrder",
+  				type: "tuple"
+  			},
+  			{
+  				internalType: "bool",
+  				name: "isERC721",
+  				type: "bool"
+  			},
+  			{
+  				internalType: "bool",
+  				name: "isWETH",
+  				type: "bool"
+  			},
+  			{
+  				internalType: "address[]",
+  				name: "receivers",
+  				type: "address[]"
+  			},
+  			{
+  				internalType: "uint256[]",
+  				name: "shares",
+  				type: "uint256[]"
+  			},
+  			{
+  				internalType: "bytes[]",
+  				name: "signatures",
+  				type: "bytes[]"
+  			}
+  		],
+  		name: "matchOrder",
+  		outputs: [
+  		],
+  		stateMutability: "payable",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  			{
+  				internalType: "address",
+  				name: "",
+  				type: "address"
+  			},
+  			{
+  				internalType: "uint256",
+  				name: "",
+  				type: "uint256"
+  			}
+  		],
+  		name: "orderAmounts",
+  		outputs: [
+  			{
+  				internalType: "uint256",
+  				name: "",
+  				type: "uint256"
+  			}
+  		],
+  		stateMutability: "view",
+  		type: "function"
+  	},
+  	{
+  		inputs: [
+  		],
+  		name: "registry",
+  		outputs: [
+  			{
+  				internalType: "contract Registry",
+  				name: "",
+  				type: "address"
+  			}
+  		],
+  		stateMutability: "view",
+  		type: "function"
+  	}
+  ];
+  var MarketplaceABI = {
+  	abi: abi$1
+  };
+
+  var abi = [
+  	"function balanceOf(address) view returns (uint256)",
+  	"function allowance(address, address) view returns (uint256)",
+  	"function approve(address, uint256)"
+  ];
+  var ERC20ABI = {
+  	abi: abi
+  };
+
+  /**
+   * @class
+   * @classdesc
+   * Marketplace class.
+   * Before using the class, config is required to be initied
+   */
+  class Marketplace {
+    _marketplace = null;
+    _weth = null;
+
+    /**
+     * Sign a buy order for a token under a collection
+     * @param {Object} obj - Buy order
+     * @param {string} [obj.collectionAddress] - Target collection address, at least one of `collectionAddress` and `collection` should be provide
+     * @param {Collection} [obj.collection] - Target collection that constructed with `netpute.Contract`, at least one of `collectionAddress` and `collection` should be provide
+     * @param {number} obj.tokenId - Target token ID
+     * @param {number} obj.validBefore - The time (timstamp in second) the order will expired
+     * @param {number} obj.amount - ERC-1155 only, the amount of tokens
+     * @param {number | string} obj.price - The maxmium WETH the buyer will pay
+     * @param {number} obj.nonce - Nonce
+     * @param {boolean} obj.skipCheck - Force to sign even if the user doesn't have much money
+     */
+    async signBuyOrder(obj) {
+      const { validBefore, tokenId, amount, price, nonce } = obj;
+      const collectionAddress =
+        obj.collectionAddress || (obj.collection && obj.collection.address);
+
+      if (
+        !collectionAddress ||
+        !validBefore ||
+        !tokenId ||
+        !amount ||
+        !price ||
+        !nonce
+      )
+        throw new MarketplaceError("Invalid Input", 401);
+      await this._initMarketplace();
+
+      const maxPayment = parseUnits(price.toString(), 18);
+      const balance = await this._weth.balanceOf(wallet.address);
+      if (!obj.skipCheck && balance.lt(maxPayment)) {
+        throw new MarketplaceError("Insufficient balance", 402);
+      }
+      const allowance = await this._weth.allowance(
+        wallet.address,
+        config.marketplaceAddress
+      );
+      if (allowance.lt(maxPayment)) {
+        try {
+          const tx = await this._weth.approve(
+            config.marketplaceAddress,
+            maxPayment
+          );
+          await tx.wait();
+        } catch (err) {
+          this._errorHandler(err);
+        }
+      }
+      const buyOrder = {
+        buyer: wallet.address,
+        validBefore,
+        collection: collectionAddress,
+        tokenId,
+        amount,
+        maxPayment,
+        nonce,
+      };
+
+      try {
+        return {
+          ...buyOrder,
+          signature: await wallet.signer._signTypedData(
+            this.domain,
+            { BuyOrder: typedMessage.types.BuyOrder },
+            buyOrder
+          ),
+        };
+      } catch (err) {
+        this._errorHandler(err);
+      }
+    }
+
+    /**
+     * Sign a sell order for a token under a collection
+     * @param {Object} obj - Sell order
+     * @param {string} [obj.collectionAddress] - Target collection address, at least one of `collectionAddress` and `collection` should be provide
+     * @param {Collection} [obj.collection] - Target collection that constructed with `netpute.Contract`, at least one of `collectionAddress` and `collection` should be provide
+     * @param {number} obj.tokenId - Target token ID
+     * @param {number} obj.validBefore - The time (timstamp in second) the order will expired
+     * @param {number} obj.amount - ERC-1155 only, the amount of tokens
+     * @param {number | string} obj.price - The minmium WETH the seller will receive
+     * @param {number} obj.nonce - Nonce
+     * @param {boolean} obj.skipCheck - Force to sign even if the user doesn't have the token
+     */
+    async signSellOrder(obj) {
+      const { validBefore, tokenId, amount, price, nonce } = obj;
+      const collection = obj.collection || new Collection(obj.collectionAddress);
+
+      if (!collection || !validBefore || !tokenId || !amount || !price || !nonce)
+        throw new MarketplaceError("Invalid Input", 401);
+      await this._initMarketplace();
+
+      if (!obj.skipCheck) {
+        if (collection.type === "ERC-721") {
+          const owner = await collection.contract.ownerOf(tokenId);
+          if (owner !== wallet.address)
+            throw new MarketplaceError("Not own this token", 402);
+        } else {
+          const balance = await collection.contract.balanceOf(
+            wallet.address,
+            tokenId
+          );
+          if (balance.lt(amount))
+            throw new MarketplaceError("Insufficient balance", 402);
+        }
+      }
+      const approved = await collection.contract.isApprovedForAll(
+        wallet.address,
+        config.marketplaceAddress
+      );
+      if (!approved) {
+        try {
+          const tx = await collection.contract
+            .connect(wallet.signer)
+            .setApprovalForAll(config.marketplaceAddress, true);
+          await tx.wait();
+        } catch (err) {
+          this._errorHandler(err);
+        }
+      }
+      const minReceive = parseUnits(price.toString(), 18);
+      const sellOrder = {
+        seller: wallet.address,
+        validBefore,
+        collection: collection.address,
+        tokenId,
+        amount,
+        minReceive,
+        nonce,
+      };
+
+      try {
+        return {
+          ...sellOrder,
+          signature: await wallet.signer._signTypedData(
+            this.domain,
+            { SellOrder: typedMessage.types.SellOrder },
+            sellOrder
+          ),
+        };
+      } catch (err) {
+        this._errorHandler(err);
+      }
+    }
+
+    async executeOrder({
+      buyOrder,
+      sellOrder,
+      isERC721,
+      isWETH,
+      receivers,
+      shares,
+      serverSignature,
+    }) {
+      if (!buyOrder && !sellOrder)
+        throw new MarketplaceError("No order provided", 401);
+      if (!buyOrder) {
+        buyOrder = {
+          buyer: wallet.address,
+          maxPayment: MaxUint256$1,
+          ...sellOrder,
+        };
+        delete buyOrder.seller;
+        delete buyOrder.minReceive;
+        delete buyOrder.signature;
+      }
+      if (!sellOrder) {
+        isWETH = true;
+        sellOrder = {
+          seller: wallet.address,
+          minReceive: Zero$1,
+          ...buyOrder,
+        };
+        delete sellOrder.buyer;
+        delete buyOrder.maxPayment;
+        delete sellOrder.signature;
+      }
+
+      const signatures = [
+        buyOrder.signature || "0x0",
+        sellOrder.signature || "0x0",
+        serverSignature,
+      ];
+      delete buyOrder.signature;
+      delete sellOrder.signature;
+
+      try {
+        const tx = await this._marketplace.matchOrder(
+          buyOrder,
+          sellOrder,
+          isERC721,
+          isWETH,
+          receivers,
+          shares,
+          signatures
+        );
+        await tx.wait();
+      } catch (err) {
+        this._errorHandler(err);
+      }
+    }
+
+    async markInvalided(hash) {}
+
+    get signDomain() {
+      return {
+        ...typedMessage.domain,
+        chainId: wallet.network,
+        verifyingContract: config.marketplaceAddress,
+      };
+    }
+
+    _check() {
+      if (!config.marketplaceAddress)
+        throw new MarketplaceError("Marketplace address not set", 400);
+      if (!config.provider) throw new MarketplaceError("No provider inited", 400);
+      if (!wallet.signer) throw new MarketplaceError("Signer not found", 404);
+    }
+
+    async _initMarketplace() {
+      if (this._marketplace) return;
+      this._check();
+      this._marketplace = new Contract(
+        config.marketplaceAddress,
+        MarketplaceABI.abi,
+        wallet.signer
+      );
+      this._weth = new Contract(
+        await this._marketplace.WETH(),
+        ERC20ABI.abi,
+        wallet.signer
+      );
+    }
+
+    _errorHandler(err) {
+      if (err.code === "INVALID_ARGUMENT")
+        throw new MarketplaceError("Input invalid", 400);
+      else if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
+        if (err.error && err.error.message) {
+          throw new MarketplaceError(err.error.message, 400);
+        } else {
+          throw new MarketplaceError(err.error.message, 500);
+        }
+      } else if (err.code === 4001) {
+        // user denied transaction
+        throw new MarketplaceError(err.message, 400);
+      } else {
+        throw new MarketplaceError(err.message, 501);
+      }
+    }
+  }
+
+  const marketplace = new Marketplace();
+
   exports.Collection = Collection;
+  exports.Marketplace = Marketplace;
   exports.config = config;
+  exports.marketplace = marketplace;
   exports.wallet = wallet;
 
   Object.defineProperty(exports, '__esModule', { value: true });
