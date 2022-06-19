@@ -20309,6 +20309,7 @@
      * @param {string} Obj.symbol Symbol of the collection, only used for ERC-721
      * @param {number} Obj.royalty Royalty for the collection in basis point (1/10000)
      * @param {string} [Obj.expectedAddress] Expected address to be deploy, reject when different
+     * @return {external:TransactionResponse}
      */
     static async deploy({
       salt,
@@ -20418,6 +20419,7 @@
     /**
      * Mint tokens
      * @param {Collection.MintConfigERC721 | Collection.MintConfigERC1155} obj - Mint Object
+     * @return {external:TransactionResponse}
      */
     mint(obj) {
       if (this.type === "ERC-721") return this._mintERC721(obj);
@@ -20624,6 +20626,11 @@
    * @property {number[]} [fees] - Contract type, empty for auto-detect, manual set to avoid api call
    * @property {number} nonce - Contract type, empty for auto-detect, manual set to avoid api call
    * @property {string} signature - Contract type, empty for auto-detect, manual set to avoid api call
+   */
+
+  /**
+   * @external TransactionResponse 
+   * @see https://docs.ethers.io/v5/api/providers/types/#providers-TransactionResponse
    */
 
   class MarketplaceError extends Error {
