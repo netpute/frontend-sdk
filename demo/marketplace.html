@@ -6,29 +6,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Netpute JS Demo</title>
     <script src="./netpute.umd.js"></script>
+    <script
+      src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+      type="application/javascript"
+    ></script>
     <script>
       netpute.config.init({
         rpc: "wss://rinkeby.infura.io/ws/v3/5ca338d679d5426dad18adec87e311a2",
         deployerAddress: "0x872d22e650c2AEc53eAF90F65AB4D5991165B65C",
         marketplaceAddress: "0xab65e9Bc4B89758c8553ea08e035b41C2B5728f6",
       });
+      const signer = new ethers.Wallet(
+        "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
+      );
+      const marketplace = new ethers.Contract(
+        netpute.config.marketplaceAddress,
+        [
+          {
+            inputs: [
+              {
+                components: [
+                  {
+                    internalType: "address",
+                    name: "buyer",
+                    type: "address",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "validBefore",
+                    type: "uint256",
+                  },
+                  {
+                    internalType: "address",
+                    name: "collection",
+                    type: "address",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "tokenId",
+                    type: "uint256",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "amount",
+                    type: "uint256",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "maxPayment",
+                    type: "uint256",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "nonce",
+                    type: "uint256",
+                  },
+                ],
+                internalType: "struct BuyOrder",
+                name: "buyOrder",
+                type: "tuple",
+              },
+            ],
+            name: "getBuyOrderHash",
+            outputs: [
+              {
+                internalType: "bytes32",
+                name: "",
+                type: "bytes32",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+          },
+          {
+            inputs: [
+              {
+                components: [
+                  {
+                    internalType: "address",
+                    name: "seller",
+                    type: "address",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "validBefore",
+                    type: "uint256",
+                  },
+                  {
+                    internalType: "address",
+                    name: "collection",
+                    type: "address",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "tokenId",
+                    type: "uint256",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "amount",
+                    type: "uint256",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "minReceive",
+                    type: "uint256",
+                  },
+                  {
+                    internalType: "uint256",
+                    name: "nonce",
+                    type: "uint256",
+                  },
+                ],
+                internalType: "struct SellOrder",
+                name: "sellOrder",
+                type: "tuple",
+              },
+            ],
+            name: "getSellOrderHash",
+            outputs: [
+              {
+                internalType: "bytes32",
+                name: "",
+                type: "bytes32",
+              },
+            ],
+            stateMutability: "view",
+            type: "function",
+          },
+        ],
+        netpute.config.provider
+      );
 
       function onSignBuyButton() {
         netpute.marketplace
           .signBuyOrder({
-            collectionAddress: document.getElementById("buyorder-collection")
-              .value,
+            collection: document.getElementById("buyorder-collection").value,
             validBefore: document.getElementById("buyorder-validBefore").value,
             tokenId: document.getElementById("buyorder-tokenId").value,
             amount: document.getElementById("buyorder-amount").value,
-            price: document.getElementById("buyorder-price").value,
+            maxPayment: document.getElementById("buyorder-price").value,
             nonce: document.getElementById("buyorder-nonce").value,
           })
           .then(
             (result) =>
               (document.getElementById(
                 "signbuy-result"
-              ).innerHTML += `Sign result: ${result}<br />`)
+              ).innerHTML += `Sign result: ${JSON.stringify(result)}<br />`)
           )
           .catch(
             (err) =>
@@ -41,26 +165,149 @@
       function onSignSellButton() {
         netpute.marketplace
           .signSellOrder({
-            collectionAddress: document.getElementById("sellorder-collection")
-              .value,
+            collection: document.getElementById("sellorder-collection").value,
             validBefore: document.getElementById("sellorder-validBefore").value,
             tokenId: document.getElementById("sellorder-tokenId").value,
             amount: document.getElementById("sellorder-amount").value,
-            price: document.getElementById("sellorder-price").value,
+            minReceive: document.getElementById("sellorder-price").value,
             nonce: document.getElementById("sellorder-nonce").value,
           })
           .then(
             (result) =>
               (document.getElementById(
                 "signsell-result"
-              ).innerHTML += `Sign result: ${result}<br />`)
+              ).innerHTML += `Sign result: ${JSON.stringify(result)}<br />`)
           )
-          // .catch(
-          //   (err) =>
-          //     (document.getElementById(
-          //       "signsell-result"
-          //     ).innerHTML += `Sign failed: ${err.code} ${err.message}<br />`)
-          // );
+          .catch((err) => {
+            console.log(err);
+            document.getElementById(
+              "signsell-result"
+            ).innerHTML += `Sign failed: ${err.code} ${err.message}<br />`;
+          });
+      }
+
+      async function onExecuteButton() {
+        const receivers = (() => {
+          const receivers = document.getElementById("receivers").value;
+          return receivers.length ? receivers.split("\n") : [];
+        })();
+        const shares = (() => {
+          const shares = document.getElementById("shares").value;
+          return shares.length ? shares.split("\n") : [];
+        })();
+        const buyOrder = {
+          collection: document.getElementById("buyorder-collection").value,
+          validBefore: document.getElementById("buyorder-validBefore").value,
+          tokenId: document.getElementById("buyorder-tokenId").value,
+          amount: document.getElementById("buyorder-amount").value,
+          maxPayment: document.getElementById("buyorder-price").value,
+          nonce: document.getElementById("buyorder-nonce").value,
+          signature: document.getElementById("buy-signature").value,
+          buyer: document.getElementById("buy-address").value,
+        };
+        const sellOrder = {
+          collection: document.getElementById("sellorder-collection").value,
+          validBefore: document.getElementById("sellorder-validBefore").value,
+          tokenId: document.getElementById("sellorder-tokenId").value,
+          amount: document.getElementById("sellorder-amount").value,
+          minReceive: document.getElementById("sellorder-price").value,
+          nonce: document.getElementById("sellorder-nonce").value,
+          signature: document.getElementById("sell-signature").value,
+          seller: document.getElementById("sell-address").value,
+        };
+        const buyHash = await marketplace.getBuyOrderHash(buyOrder);
+        const sellHash = await marketplace.getSellOrderHash(sellOrder);
+        const serverHash = ethers.utils.keccak256(
+          ethers.utils.solidityPack(
+            ["string", "bytes32", "bytes32", "address[]", "uint256[]"],
+            ["NetputeMarketplace", sellHash, buyHash, receivers, shares]
+          )
+        );
+        const serverSignature = await signer.signMessage(
+          ethers.utils.arrayify(serverHash)
+        );
+        netpute.marketplace
+          .executeOrder({
+            buyOrder,
+            sellOrder,
+            isERC721: document.getElementById("is-erc721").checked,
+            isWETH: document.getElementById("is-weth").checked,
+            receivers,
+            shares,
+            serverSignature,
+          })
+          .then(
+            (result) =>
+              (document.getElementById(
+                "execute-result"
+              ).innerHTML += `Sign result: ${JSON.stringify(result)}<br />`)
+          )
+          .catch(
+            (err) =>
+              (document.getElementById(
+                "execute-result"
+              ).innerHTML += `Sign failed: ${err.code} ${err.message}<br />`)
+          );
+      }
+
+      function onMarkBuyOrderInvalidButton() {
+        netpute.marketplace
+          .markAsInvalid({
+            buyOrder: {
+              buyer: netpute.wallet.address,
+              collection: document.getElementById("buyorder-collection").value,
+              validBefore: document.getElementById("buyorder-validBefore")
+                .value,
+              tokenId: document.getElementById("buyorder-tokenId").value,
+              amount: document.getElementById("buyorder-amount").value,
+              maxPayment: document.getElementById("buyorder-price").value,
+              nonce: document.getElementById("buyorder-nonce").value,
+            },
+          })
+          .then(
+            (result) =>
+              (document.getElementById(
+                "signbuy-result"
+              ).innerHTML += `Mark invalid result: ${JSON.stringify(
+                result
+              )}<br />`)
+          )
+          .catch(
+            (err) =>
+              (document.getElementById(
+                "signbuy-result"
+              ).innerHTML += `Mark invalid failed: ${err.code} ${err.message}<br />`)
+          );
+      }
+
+      function onMarkSellOrderInvalidButton() {
+        netpute.marketplace
+          .markAsInvalid({
+            sellOrder: {
+              seller: netpute.wallet.address,
+              collection: document.getElementById("sellorder-collection").value,
+              validBefore: document.getElementById("sellorder-validBefore")
+                .value,
+              tokenId: document.getElementById("sellorder-tokenId").value,
+              amount: document.getElementById("sellorder-amount").value,
+              minReceive: document.getElementById("sellorder-price").value,
+              nonce: document.getElementById("sellorder-nonce").value,
+            },
+          })
+          .then(
+            (result) =>
+              (document.getElementById(
+                "signsell-result"
+              ).innerHTML += `Mark invalid result: ${JSON.stringify(
+                result
+              )}<br />`)
+          )
+          .catch(
+            (err) =>
+              (document.getElementById(
+                "signsell-result"
+              ).innerHTML += `Mark invalid failed: ${err.code} ${err.message}<br />`)
+          );
       }
     </script>
   </head>
@@ -99,6 +346,7 @@
           <input type="number" id="buyorder-price" placeholder="price" /><br />
           <input type="number" id="buyorder-nonce" placeholder="Nonce" /><br />
           <button onclick="onSignBuyButton()">Sign Buy</button>
+          <button onclick="onMarkBuyOrderInvalidButton()">Invalid it</button>
           <div>
             Result:
             <p id="signbuy-result"></p>
@@ -130,12 +378,60 @@
           <input type="number" id="sellorder-price" placeholder="price" /><br />
           <input type="number" id="sellorder-nonce" placeholder="Nonce" /><br />
           <button onclick="onSignSellButton()">Sign sell</button>
+          <button onclick="onMarkSellOrderInvalidButton()">Invalid it</button>
           <div>
             Result:
             <p id="signsell-result"></p>
           </div>
         </div>
-        
+        <div>
+          <h2>Execute Order</h2>
+          <p>
+            Above fields are used, will automatically generate server signature
+          </p>
+          <input
+            type="text"
+            id="buy-signature"
+            placeholder="Buy Order Signature"
+          /><br />
+          <input
+            type="text"
+            id="sell-signature"
+            placeholder="Sell Order Signature"
+          /><br />
+          <input
+            type="text"
+            id="buy-address"
+            placeholder="Buyer Address"
+          /><br />
+          <input
+            type="text"
+            id="sell-address"
+            placeholder="Seller Address"
+          /><br />
+          <label> <input type="checkbox" id="is-erc721" />Is ERC-721</label
+          ><br />
+          <label> <input type="checkbox" id="is-weth" />Is WETH</label><br />
+          <textarea
+            id="receivers"
+            cols="30"
+            rows="10"
+            placeholder="Fee receivers, 1 address per line"
+          ></textarea
+          ><br />
+          <textarea
+            id="shares"
+            cols="30"
+            rows="10"
+            placeholder="Shares, 1 per line"
+          ></textarea
+          ><br />
+          <button onclick="onExecuteButton()">Execute</button>
+          <div>
+            Result:
+            <p id="execute-result"></p>
+          </div>
+        </div>
       </div>
     </section>
   </body>

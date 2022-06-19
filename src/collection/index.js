@@ -151,8 +151,7 @@ export class Collection {
     fees,
     signature,
   }) {
-    if (!wallet.signer)
-      throw new CollectionError("Signer not found", 404);
+    if (!wallet.signer) throw new CollectionError("Signer not found", 404);
 
     const contract = this._contract.connect(wallet.signer);
     try {
@@ -186,8 +185,7 @@ export class Collection {
     nonce,
     signature,
   }) {
-    if (!wallet.signer)
-      throw new CollectionError("Signer not found", 404);
+    if (!wallet.signer) throw new CollectionError("Signer not found", 404);
     const [single, batch] = [!!(id && amount), !!(ids && amounts)];
     if (!(single ^ batch))
       throw new CollectionError(
@@ -317,7 +315,7 @@ export class Collection {
 }
 
 /**
- * Object to mint an ERC721 token 
+ * Object to mint an ERC721 token
  * @typedef {Object} MintConfigERC721
  * @memberof Collection
  * @property {number} start - Contract type, empty for auto-detect, manual set to avoid api call

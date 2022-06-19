@@ -3464,7 +3464,7 @@
 
   var BN$1 = bn.exports;
 
-  const version$i = "logger/5.6.0";
+  const version$j = "logger/5.6.0";
 
   let _permanentCensorErrors = false;
   let _censorErrors = false;
@@ -3774,7 +3774,7 @@
       }
       static globalLogger() {
           if (!_globalLogger) {
-              _globalLogger = new Logger(version$i);
+              _globalLogger = new Logger(version$j);
           }
           return _globalLogger;
       }
@@ -3810,9 +3810,9 @@
   Logger.errors = ErrorCode;
   Logger.levels = LogLevel;
 
-  const version$h = "bytes/5.6.0";
+  const version$i = "bytes/5.6.0";
 
-  const logger$q = new Logger(version$h);
+  const logger$q = new Logger(version$i);
   ///////////////////////////////
   function isHexable(value) {
       return !!(value.toHexString);
@@ -4210,10 +4210,10 @@
       return result;
   }
 
-  const version$g = "bignumber/5.6.0";
+  const version$h = "bignumber/5.6.0";
 
   var BN = BN$1.BN;
-  const logger$p = new Logger(version$g);
+  const logger$p = new Logger(version$h);
   const _constructorGuard$3 = {};
   const MAX_SAFE = 0x1fffffffffffff;
   function isBigNumberish(value) {
@@ -4502,7 +4502,7 @@
       return (new BN(value, 36)).toString(16);
   }
 
-  const logger$o = new Logger(version$g);
+  const logger$o = new Logger(version$h);
   const _constructorGuard$2 = {};
   const Zero$2 = BigNumber.from(0);
   const NegativeOne$2 = BigNumber.from(-1);
@@ -4857,7 +4857,7 @@
   const ONE = FixedNumber.from(1);
   const BUMP = FixedNumber.from("0.5");
 
-  const version$f = "properties/5.6.0";
+  const version$g = "properties/5.6.0";
 
   var __awaiter$9 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
       function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -4868,7 +4868,7 @@
           step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
   };
-  const logger$n = new Logger(version$f);
+  const logger$n = new Logger(version$g);
   function defineReadOnly(object, name, value) {
       Object.defineProperty(object, name, {
           enumerable: true,
@@ -4982,9 +4982,9 @@
       }
   }
 
-  const version$e = "abi/5.6.0";
+  const version$f = "abi/5.6.0";
 
-  const logger$m = new Logger(version$e);
+  const logger$m = new Logger(version$f);
   const _constructorGuard$1 = {};
   let ModifiersBytes = { calldata: true, memory: true, storage: true };
   let ModifiersNest = { calldata: true, memory: true };
@@ -5832,7 +5832,7 @@
       return result;
   }
 
-  const logger$l = new Logger(version$e);
+  const logger$l = new Logger(version$f);
   function checkResultErrors(result) {
       // Find the first error (if any)
       const errors = [];
@@ -6634,9 +6634,9 @@
       return '0x' + sha3.keccak_256(arrayify(data));
   }
 
-  const version$d = "rlp/5.6.0";
+  const version$e = "rlp/5.6.0";
 
-  const logger$k = new Logger(version$d);
+  const logger$k = new Logger(version$e);
   function arrayifyInteger(value) {
       const result = [];
       while (value) {
@@ -6751,9 +6751,9 @@
       return decoded.result;
   }
 
-  const version$c = "address/5.6.0";
+  const version$d = "address/5.6.0";
 
-  const logger$j = new Logger(version$c);
+  const logger$j = new Logger(version$d);
   function getChecksumAddress(address) {
       if (!isHexString(address, 20)) {
           logger$j.throwArgumentError("invalid address", "address", address);
@@ -6893,7 +6893,7 @@
       }
   }
 
-  const logger$i = new Logger(version$e);
+  const logger$i = new Logger(version$f);
   function pack(writer, coders, values) {
       let arrayValues = null;
       if (Array.isArray(values)) {
@@ -7226,9 +7226,9 @@
       }
   }
 
-  const version$b = "strings/5.6.0";
+  const version$c = "strings/5.6.0";
 
-  const logger$h = new Logger(version$b);
+  const logger$h = new Logger(version$c);
   ///////////////////////////////
   var UnicodeNormalizationForm;
   (function (UnicodeNormalizationForm) {
@@ -7697,7 +7697,7 @@
       }
   }
 
-  const logger$g = new Logger(version$e);
+  const logger$g = new Logger(version$f);
   const paramTypeBytes = new RegExp(/^bytes([0-9]*)$/);
   const paramTypeNumber = new RegExp(/^(u?int)([0-9]*)$/);
   class AbiCoder {
@@ -7781,9 +7781,9 @@
       return keccak256(toUtf8Bytes(text));
   }
 
-  const version$a = "hash/5.6.0";
+  const version$b = "hash/5.6.0";
 
-  const logger$f = new Logger(version$a);
+  const logger$f = new Logger(version$b);
   const Zeros = new Uint8Array(32);
   Zeros.fill(0);
   const Partition = new RegExp("^((.*)\\.)?([^.]+)$");
@@ -7824,7 +7824,7 @@
           step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
   };
-  const logger$e = new Logger(version$a);
+  const logger$e = new Logger(version$b);
   const padding = new Uint8Array(32);
   padding.fill(0);
   const NegativeOne = BigNumber.from(-1);
@@ -8248,7 +8248,7 @@
       }
   }
 
-  const logger$d = new Logger(version$e);
+  const logger$d = new Logger(version$f);
   class LogDescription extends Description {
   }
   class TransactionDescription extends Description {
@@ -8833,7 +8833,7 @@
       }
   }
 
-  const version$9 = "abstract-provider/5.6.0";
+  const version$a = "abstract-provider/5.6.0";
 
   var __awaiter$7 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
       function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -8844,7 +8844,7 @@
           step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
   };
-  const logger$c = new Logger(version$9);
+  const logger$c = new Logger(version$a);
   //export type CallTransactionable = {
   //    call(transaction: TransactionRequest): Promise<TransactionResponse>;
   //};
@@ -8894,7 +8894,7 @@
       }
   }
 
-  const version$8 = "abstract-signer/5.6.0";
+  const version$9 = "abstract-signer/5.6.0";
 
   var __awaiter$6 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
       function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -8905,7 +8905,7 @@
           step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
   };
-  const logger$b = new Logger(version$8);
+  const logger$b = new Logger(version$9);
   const allowedTransactionKeys$1 = [
       "accessList", "ccipReadEnabled", "chainId", "customData", "data", "from", "gasLimit", "gasPrice", "maxFeePerGas", "maxPriorityFeePerGas", "nonce", "to", "type", "value"
   ];
@@ -12887,9 +12887,9 @@
 
   var EC$1 = elliptic_1.ec;
 
-  const version$7 = "signing-key/5.6.0";
+  const version$8 = "signing-key/5.6.0";
 
-  const logger$a = new Logger(version$7);
+  const logger$a = new Logger(version$8);
   let _curve = null;
   function getCurve() {
       if (!_curve) {
@@ -12962,9 +12962,9 @@
       return logger$a.throwArgumentError("invalid public or private key", "key", "[REDACTED]");
   }
 
-  const version$6 = "transactions/5.6.0";
+  const version$7 = "transactions/5.6.0";
 
-  const logger$9 = new Logger(version$6);
+  const logger$9 = new Logger(version$7);
   var TransactionTypes;
   (function (TransactionTypes) {
       TransactionTypes[TransactionTypes["legacy"] = 0] = "legacy";
@@ -13236,7 +13236,7 @@
       });
   }
 
-  const version$5 = "contracts/5.6.0";
+  const version$6 = "contracts/5.6.0";
 
   var __awaiter$5 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
       function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -13247,7 +13247,7 @@
           step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
   };
-  const logger$8 = new Logger(version$5);
+  const logger$8 = new Logger(version$6);
   function resolveName(resolver, nameOrPromise) {
       return __awaiter$5(this, void 0, void 0, function* () {
           const name = yield nameOrPromise;
@@ -14235,16 +14235,16 @@
   //console.log(Base58.decode("Qmd2V777o5XvJbYMeMb8k2nU5f8d3ciUQ5YpYuWhzv8iDj"))
   //console.log(Base58.encode(Base58.decode("Qmd2V777o5XvJbYMeMb8k2nU5f8d3ciUQ5YpYuWhzv8iDj")))
 
-  const version$4 = "sha2/5.6.0";
+  const version$5 = "sha2/5.6.0";
 
-  new Logger(version$4);
+  new Logger(version$5);
   function sha256(data) {
       return "0x" + (hash.sha256().update(arrayify(data)).digest("hex"));
   }
 
-  const version$3 = "networks/5.6.0";
+  const version$4 = "networks/5.6.0";
 
-  const logger$7 = new Logger(version$3);
+  const logger$7 = new Logger(version$4);
   function isRenetworkable(value) {
       return (value && typeof (value.renetwork) === "function");
   }
@@ -14481,7 +14481,7 @@
       return btoa(textData);
   }
 
-  const version$2 = "web/5.6.0";
+  const version$3 = "web/5.6.0";
 
   var __awaiter$4 = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
       function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -14540,7 +14540,7 @@
           step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
   };
-  const logger$6 = new Logger(version$2);
+  const logger$6 = new Logger(version$3);
   function staller(duration) {
       return new Promise((resolve) => {
           setTimeout(resolve, duration);
@@ -15100,9 +15100,9 @@
     fromWords: fromWords
   };
 
-  const version$1 = "providers/5.6.0";
+  const version$2 = "providers/5.6.0";
 
-  const logger$5 = new Logger(version$1);
+  const logger$5 = new Logger(version$2);
   class Formatter {
       constructor() {
           logger$5.checkNew(new.target, Formatter);
@@ -15519,7 +15519,7 @@
           step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
   };
-  const logger$4 = new Logger(version$1);
+  const logger$4 = new Logger(version$2);
   const MAX_CCIP_REDIRECTS = 10;
   //////////////////////////////
   // Event Serializeing
@@ -17482,7 +17482,7 @@
           step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
   };
-  const logger$3 = new Logger(version$1);
+  const logger$3 = new Logger(version$2);
   const errorGas = ["call", "estimateGas"];
   function checkError(method, error, params) {
       // Undo the "convenience" some nodes are attempting to prevent backwards
@@ -18057,7 +18057,7 @@
       }
   }
   catch (error) {
-      const logger = new Logger(version$1);
+      const logger = new Logger(version$2);
       WS = function () {
           logger.throwError("WebSockets not supported in this environment", Logger.errors.UNSUPPORTED_OPERATION, {
               operation: "new WebSocket()"
@@ -18074,7 +18074,7 @@
           step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
   };
-  const logger$2 = new Logger(version$1);
+  const logger$2 = new Logger(version$2);
   /**
    *  Notes:
    *
@@ -18357,7 +18357,7 @@
       }
   }
 
-  const logger$1 = new Logger(version$1);
+  const logger$1 = new Logger(version$2);
   let _nextId = 1;
   function buildWeb3LegacyFetcher(provider, sendFunc) {
       const fetcher = "Web3LegacyFetcher";
@@ -18484,9 +18484,9 @@
       }
   }
 
-  const version = "units/5.6.0";
+  const version$1 = "units/5.6.0";
 
-  const logger = new Logger(version);
+  const logger = new Logger(version$1);
   const names = [
       "wei",
       "kwei",
@@ -18511,6 +18511,10 @@
   function parseEther(ether) {
       return parseUnits(ether, 18);
   }
+
+  const version = "ethers/5.6.0";
+
+  new Logger(version);
 
   /**
    * @class
@@ -20430,8 +20434,7 @@
       fees,
       signature,
     }) {
-      if (!wallet.signer)
-        throw new CollectionError("Signer not found", 404);
+      if (!wallet.signer) throw new CollectionError("Signer not found", 404);
 
       const contract = this._contract.connect(wallet.signer);
       try {
@@ -20465,8 +20468,7 @@
       nonce,
       signature,
     }) {
-      if (!wallet.signer)
-        throw new CollectionError("Signer not found", 404);
+      if (!wallet.signer) throw new CollectionError("Signer not found", 404);
       const [single, batch] = [!!(id && amount), !!(ids && amounts)];
       if (!(single ^ batch))
         throw new CollectionError(
@@ -20596,7 +20598,7 @@
   }
 
   /**
-   * Object to mint an ERC721 token 
+   * Object to mint an ERC721 token
    * @typedef {Object} MintConfigERC721
    * @memberof Collection
    * @property {number} start - Contract type, empty for auto-detect, manual set to avoid api call
@@ -21239,7 +21241,8 @@
   var abi = [
   	"function balanceOf(address) view returns (uint256)",
   	"function allowance(address, address) view returns (uint256)",
-  	"function approve(address, uint256)"
+  	"function approve(address, uint256)",
+  	"function deposit() payable"
   ];
   var ERC20ABI = {
   	abi: abi
@@ -21252,41 +21255,45 @@
    * Before using the class, config is required to be initied
    */
   class Marketplace {
-    _marketplace = null;
     _weth = null;
 
     /**
      * Sign a buy order for a token under a collection
-     * @param {Object} obj - Buy order
-     * @param {string} [obj.collectionAddress] - Target collection address, at least one of `collectionAddress` and `collection` should be provide
-     * @param {Collection} [obj.collection] - Target collection that constructed with `netpute.Contract`, at least one of `collectionAddress` and `collection` should be provide
-     * @param {number} obj.tokenId - Target token ID
-     * @param {number} obj.validBefore - The time (timstamp in second) the order will expired
-     * @param {number} obj.amount - ERC-1155 only, the amount of tokens
-     * @param {number | string} obj.price - The maxmium WETH the buyer will pay
-     * @param {number} obj.nonce - Nonce
-     * @param {boolean} obj.skipCheck - Force to sign even if the user doesn't have much money
+     * @param {Marketplace.BuyOrder}
+     * @return {Marketplace.SignedBuyOrder}
      */
     async signBuyOrder(obj) {
-      const { validBefore, tokenId, amount, price, nonce } = obj;
-      const collectionAddress =
-        obj.collectionAddress || (obj.collection && obj.collection.address);
+      const { validBefore, tokenId, amount, maxPayment, nonce } = obj;
+      const collection =
+        typeof obj.collection === 'string' ? obj.collection : (obj.collection && obj.collection.address);
 
       if (
-        !collectionAddress ||
+        !collection ||
         !validBefore ||
         !tokenId ||
         !amount ||
-        !price ||
+        !maxPayment ||
         !nonce
       )
         throw new MarketplaceError("Invalid Input", 401);
       await this._initMarketplace();
 
-      const maxPayment = parseUnits(price.toString(), 18);
-      const balance = await this._weth.balanceOf(wallet.address);
-      if (!obj.skipCheck && balance.lt(maxPayment)) {
+      const [wethBalance, ethBalance] = await Promise.all([
+        this._weth.balanceOf(wallet.address),
+        config.provider.getBalance(wallet.address),
+      ]);
+      if (!obj.skipCheck && wethBalance.add(ethBalance).lt(maxPayment)) {
         throw new MarketplaceError("Insufficient balance", 402);
+      }
+      if (wethBalance.lt(maxPayment)) {
+        try {
+          const tx = await this._weth.deposit({
+            value: maxPayment.sub(wethBalance),
+          });
+          await tx.wait();
+        } catch (err) {
+          this._errorHandler(err);
+        }
       }
       const allowance = await this._weth.allowance(
         wallet.address,
@@ -21306,7 +21313,7 @@
       const buyOrder = {
         buyer: wallet.address,
         validBefore,
-        collection: collectionAddress,
+        collection,
         tokenId,
         amount,
         maxPayment,
@@ -21329,21 +21336,15 @@
 
     /**
      * Sign a sell order for a token under a collection
-     * @param {Object} obj - Sell order
-     * @param {string} [obj.collectionAddress] - Target collection address, at least one of `collectionAddress` and `collection` should be provide
-     * @param {Collection} [obj.collection] - Target collection that constructed with `netpute.Contract`, at least one of `collectionAddress` and `collection` should be provide
-     * @param {number} obj.tokenId - Target token ID
-     * @param {number} obj.validBefore - The time (timstamp in second) the order will expired
-     * @param {number} obj.amount - ERC-1155 only, the amount of tokens
-     * @param {number | string} obj.price - The minmium WETH the seller will receive
-     * @param {number} obj.nonce - Nonce
-     * @param {boolean} obj.skipCheck - Force to sign even if the user doesn't have the token
+     * @param {Marketplace.SellOrder}
+     * @return {Marketplace.SignedSellOrder}
      */
     async signSellOrder(obj) {
-      const { validBefore, tokenId, amount, price, nonce } = obj;
-      const collection = obj.collection || new Collection(obj.collectionAddress);
+      const { validBefore, tokenId, amount, minReceive, nonce } = obj;
+      const collection = typeof obj.collection === 'string' ? new Collection(obj.collection) : obj.collection;
+      await collection.inited;
 
-      if (!collection || !validBefore || !tokenId || !amount || !price || !nonce)
+      if (!collection || !validBefore || !tokenId || !amount || !minReceive || !nonce)
         throw new MarketplaceError("Invalid Input", 401);
       await this._initMarketplace();
 
@@ -21375,7 +21376,6 @@
           this._errorHandler(err);
         }
       }
-      const minReceive = parseUnits(price.toString(), 18);
       const sellOrder = {
         seller: wallet.address,
         validBefore,
@@ -21400,17 +21400,30 @@
       }
     }
 
-    async executeOrder({
-      buyOrder,
-      sellOrder,
-      isERC721,
-      isWETH,
-      receivers,
-      shares,
-      serverSignature,
-    }) {
+    /**
+     * Execute an order from any one
+     * @param {Object} obj - Order match info
+     * @param {Marketplace.BuyOrder | Marketplace.SignedBuyOrder} [obj.buyOrder] - The object obtained from signBuyOrder function, implicitly use the sell order when not provide
+     * @param {Marketplace.SellOrder | Marketplace.SignedSellOrder} [obj.sellOrder] - The object obtained from signSellOrder function, implicitly use the buy order when not provide
+     * @param {boolean} obj.isERC721 - If the trading NFT using ERC-721
+     * @param {boolean} obj.isWETH - If the match using WETH (should always be true when the match is executed by seller)
+     * @param {string[]} obj.receivers - Receivers' addresses of the match, including platform and royalty
+     * @param {Array<string | BigNumber>} obj.shares - The amount of fee for each receiver in the order of receivers
+     * @param {string} obj.serverSignature - The match signature from server
+     * @return {external:TransactionResponse}
+     */
+    async executeOrder(props) {
+      const {
+        buyOrder,
+        sellOrder,
+        isERC721,
+        isWETH,
+        receivers,
+        shares,
+        serverSignature,
+      } = props;
       if (!buyOrder && !sellOrder)
-        throw new MarketplaceError("No order provided", 401);
+        throw new MarketplaceError("Missing order", 401);
       if (!buyOrder) {
         buyOrder = {
           buyer: wallet.address,
@@ -21429,37 +21442,76 @@
           ...buyOrder,
         };
         delete sellOrder.buyer;
-        delete buyOrder.maxPayment;
+        delete sellOrder.maxPayment;
         delete sellOrder.signature;
       }
 
       const signatures = [
-        buyOrder.signature || "0x0",
-        sellOrder.signature || "0x0",
+        sellOrder.signature || "0x00",
+        buyOrder.signature || "0x00",
         serverSignature,
       ];
       delete buyOrder.signature;
       delete sellOrder.signature;
 
+      const marketplace = new Contract(
+        config.marketplaceAddress,
+        MarketplaceABI.abi,
+        wallet.signer
+      );
       try {
-        const tx = await this._marketplace.matchOrder(
-          buyOrder,
+        const tx = await marketplace.matchOrder(
           sellOrder,
+          buyOrder,
           isERC721,
           isWETH,
           receivers,
           shares,
-          signatures
+          signatures,
+          {
+            value: isWETH
+              ? undefined
+              : shares.reduce((a, b) =>
+                  a.add(BigNumber.from(b), BigNumber.from(0))
+                ),
+          }
         );
-        await tx.wait();
+        return tx;
       } catch (err) {
         this._errorHandler(err);
       }
     }
 
-    async markInvalided(hash) {}
+    /**
+     * Invalid an order on chain to prevent being executed
+     * @param {Object} obj - Order match info
+     * @param {Marketplace.BuyOrder | Marketplace.SignedBuyOrder} [obj.buyOrder] - The buy order object
+     * @param {Marketplace.SellOrder | Marketplace.SignedSellOrder} [obj.sellOrder] - The sell order object
+     * @return {external:TransactionResponse}
+     */
+    async markAsInvalid({ buyOrder, sellOrder }) {
+      if (!!buyOrder === !!sellOrder)
+        throw new MarketplaceError(
+          "Can mark exact one order invalid at the same time",
+          401
+        );
+      const marketplace = new Contract(
+        config.marketplaceAddress,
+        MarketplaceABI.abi,
+        wallet.signer
+      );
+      const orderHash = buyOrder
+        ? await marketplace.getBuyOrderHash(buyOrder)
+        : await marketplace.getSellOrderHash(sellOrder);
+      try {
+        const tx = await marketplace.markAsInvalid(orderHash);
+        return tx;
+      } catch (err) {
+        this._errorHandler(err);
+      }
+    }
 
-    get signDomain() {
+    get domain() {
       return {
         ...typedMessage.domain,
         chainId: wallet.network,
@@ -21508,6 +21560,65 @@
   }
 
   const marketplace = new Marketplace();
+
+  /**
+   * BuyOrder object
+   * @typedef {Object} BuyOrder
+   * @memberof Marketplace
+   * @property {string | Collection} collection - Target collection address or instance that constructed with `netpute.Contract`
+   * @property {number} tokenId - Target token ID
+   * @property {number} validBefore - The time (timstamp in second) the order will expired
+   * @property {number} amount - Required but only work for ERC-1155, the amount of tokens
+   * @property {string | BigNumber} maxPayment - The maxmium WETH the buyer will pay
+   * @property {number} nonce - Nonce
+   * @property {boolean} [skipCheck] - Force to sign even if the user doesn't have much money
+   */
+
+  /**
+   * SignedBuyOrder object
+   * @typedef {Object} SignedBuyOrder
+   * @memberof Marketplace
+   * @property {string} buyer - The buyer of the order
+   * @property {string} collection - Target collection address
+   * @property {number} tokenId - Target token ID
+   * @property {number} validBefore - The time the order will expire
+   * @property {number} amount - The amount of tokens
+   * @property {string | BigNumber} maxPayment - The maxmium WETH the buyer will pay
+   * @property {number} nonce - Nonce
+   * @property {string} signature - The signature
+   */
+
+  /**
+   * SellOrder object
+   * @typedef {Object} SellOrder
+   * @memberof Marketplace
+   * @property {string | Collection} collection - Target collection address or instance that constructed with `netpute.Contract`
+   * @property {number} tokenId - Target token ID
+   * @property {number} validBefore - The time (timstamp in second) the order will expired
+   * @property {number} amount - Required but only work for ERC-1155, the amount of tokens
+   * @property {string | BigNumber} minReceive - The minimum WETH the seller will receive
+   * @property {number} nonce - Nonce
+   * @property {boolean} [skipCheck] - Force to sign even if the user doesn't have much money
+   */
+
+  /**
+   * SignedBuyOrder object
+   * @typedef {Object} SignedSellOrder
+   * @memberof Marketplace
+   * @property {string} seller - The seller of the order
+   * @property {string} collection - Target collection address
+   * @property {number} tokenId - Target token ID
+   * @property {number} validBefore - The time the order will expire
+   * @property {number} amount - The amount of tokens
+   * @property {string | BigNumber} minReceive - The minimum WETH the seller will receive
+   * @property {number} nonce - Nonce
+   * @property {string} signature - The signature
+   */
+
+  /**
+   * @external TransactionResponse 
+   * @see https://docs.ethers.io/v5/api/providers/types/#providers-TransactionResponse
+   */
 
   exports.Collection = Collection;
   exports.Marketplace = Marketplace;

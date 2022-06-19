@@ -94,7 +94,7 @@ Before using the class, config is required to be initied</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="marketplace_index.js.html">marketplace/index.js</a>, <a href="marketplace_index.js.html#line7">line 7</a>
+        <a href="marketplace_index.js.html">marketplace/index.js</a>, <a href="marketplace_index.js.html#line16">line 16</a>
     </li></ul></dd>
     
 
@@ -142,7 +142,2194 @@ Before using the class, config is required to be initied</div>
     
 
     
+        <h3 class="subsection-title">Methods</h3>
 
+        
+            
+
+    
+
+    
+    <h4 class="name" id="executeOrder"><span class="type-signature">(async) </span>executeOrder<span class="signature">(obj)</span><span class="type-signature"> &rarr; {<a href="external-TransactionResponse.html">external:TransactionResponse</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Execute an order from any one
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>obj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Order match info
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>buyOrder</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Marketplace.html#.BuyOrder">Marketplace.BuyOrder</a></span>
+|
+
+<span class="param-type"><a href="Marketplace.html#.SignedBuyOrder">Marketplace.SignedBuyOrder</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The object obtained from signBuyOrder function, implicitly use the sell order when not provide</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sellOrder</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Marketplace.html#.SellOrder">Marketplace.SellOrder</a></span>
+|
+
+<span class="param-type"><a href="Marketplace.html#.SignedSellOrder">Marketplace.SignedSellOrder</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The object obtained from signSellOrder function, implicitly use the buy order when not provide</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isERC721</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">If the trading NFT using ERC-721</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isWETH</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">If the match using WETH (should always be true when the match is executed by seller)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>receivers</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Receivers' addresses of the match, including platform and royalty</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>shares</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;(string|BigNumber)></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The amount of fee for each receiver in the order of receivers</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>serverSignature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The match signature from server</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marketplace_index.js.html">marketplace/index.js</a>, <a href="marketplace_index.js.html#line174">line 174</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="external-TransactionResponse.html">external:TransactionResponse</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="markAsInvalid"><span class="type-signature">(async) </span>markAsInvalid<span class="signature">(obj)</span><span class="type-signature"> &rarr; {<a href="external-TransactionResponse.html">external:TransactionResponse</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Invalid an order on chain to prevent being executed
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>obj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Order match info
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>buyOrder</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Marketplace.html#.BuyOrder">Marketplace.BuyOrder</a></span>
+|
+
+<span class="param-type"><a href="Marketplace.html#.SignedBuyOrder">Marketplace.SignedBuyOrder</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The buy order object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sellOrder</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Marketplace.html#.SellOrder">Marketplace.SellOrder</a></span>
+|
+
+<span class="param-type"><a href="Marketplace.html#.SignedSellOrder">Marketplace.SignedSellOrder</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The sell order object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marketplace_index.js.html">marketplace/index.js</a>, <a href="marketplace_index.js.html#line251">line 251</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="external-TransactionResponse.html">external:TransactionResponse</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="signBuyOrder"><span class="type-signature">(async) </span>signBuyOrder<span class="signature">(obj)</span><span class="type-signature"> &rarr; {<a href="Marketplace.html#.SignedBuyOrder">Marketplace.SignedBuyOrder</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sign a buy order for a token under a collection
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>obj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Marketplace.html#.BuyOrder">Marketplace.BuyOrder</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marketplace_index.js.html">marketplace/index.js</a>, <a href="marketplace_index.js.html#line24">line 24</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Marketplace.html#.SignedBuyOrder">Marketplace.SignedBuyOrder</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="signSellOrder"><span class="type-signature">(async) </span>signSellOrder<span class="signature">(obj)</span><span class="type-signature"> &rarr; {<a href="Marketplace.html#.SignedSellOrder">Marketplace.SignedSellOrder</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sign a sell order for a token under a collection
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>obj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Marketplace.html#.SellOrder">Marketplace.SellOrder</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marketplace_index.js.html">marketplace/index.js</a>, <a href="marketplace_index.js.html#line101">line 101</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Marketplace.html#.SignedSellOrder">Marketplace.SignedSellOrder</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+<h4 class="name" id=".BuyOrder">BuyOrder</h4>
+
+
+
+
+<div class="description">
+    BuyOrder object
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>collection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="Collection.html">Collection</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Target collection address or instance that constructed with `netpute.Contract`</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tokenId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Target token ID</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>validBefore</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The time (timstamp in second) the order will expired</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>amount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Required but only work for ERC-1155, the amount of tokens</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maxPayment</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">BigNumber</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The maxmium WETH the buyer will pay</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>nonce</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Nonce</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>skipCheck</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Force to sign even if the user doesn't have much money</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marketplace_index.js.html">marketplace/index.js</a>, <a href="marketplace_index.js.html#line323">line 323</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".SellOrder">SellOrder</h4>
+
+
+
+
+<div class="description">
+    SellOrder object
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>collection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="Collection.html">Collection</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Target collection address or instance that constructed with `netpute.Contract`</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tokenId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Target token ID</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>validBefore</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The time (timstamp in second) the order will expired</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>amount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Required but only work for ERC-1155, the amount of tokens</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>minReceive</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">BigNumber</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The minimum WETH the seller will receive</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>nonce</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Nonce</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>skipCheck</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Force to sign even if the user doesn't have much money</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marketplace_index.js.html">marketplace/index.js</a>, <a href="marketplace_index.js.html#line350">line 350</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".SignedBuyOrder">SignedBuyOrder</h4>
+
+
+
+
+<div class="description">
+    SignedBuyOrder object
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>buyer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The buyer of the order</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>collection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Target collection address</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tokenId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Target token ID</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>validBefore</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The time the order will expire</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>amount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The amount of tokens</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maxPayment</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">BigNumber</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The maxmium WETH the buyer will pay</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>nonce</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Nonce</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>signature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The signature</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marketplace_index.js.html">marketplace/index.js</a>, <a href="marketplace_index.js.html#line336">line 336</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
+                
+<h4 class="name" id=".SignedSellOrder">SignedSellOrder</h4>
+
+
+
+
+<div class="description">
+    SignedBuyOrder object
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>seller</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The seller of the order</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>collection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Target collection address</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tokenId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Target token ID</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>validBefore</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The time the order will expire</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>amount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The amount of tokens</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>minReceive</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">BigNumber</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The minimum WETH the seller will receive</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>nonce</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Nonce</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>signature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The signature</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marketplace_index.js.html">marketplace/index.js</a>, <a href="marketplace_index.js.html#line363">line 363</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+            
     
 
     
@@ -156,13 +2343,13 @@ Before using the class, config is required to be initied</div>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-BigNumber.html">BigNumber</a></li></ul><h3>Classes</h3><ul><li><a href="Collection.html">Collection</a></li><li><a href="Config.html">Config</a></li><li><a href="Marketplace.html">Marketplace</a></li><li><a href="Wallet.html">Wallet</a></li></ul><h3>Events</h3><ul><li><a href="Wallet.html#event:disconnected">disconnected</a></li><li><a href="Wallet.html#event:networkchanged">networkchanged</a></li><li><a href="Wallet.html#event:walletchanged">walletchanged</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-BigNumber.html">BigNumber</a></li><li><a href="external-TransactionResponse.html">TransactionResponse</a></li></ul><h3>Classes</h3><ul><li><a href="Collection.html">Collection</a></li><li><a href="Config.html">Config</a></li><li><a href="Marketplace.html">Marketplace</a></li><li><a href="Wallet.html">Wallet</a></li></ul><h3>Events</h3><ul><li><a href="Wallet.html#event:disconnected">disconnected</a></li><li><a href="Wallet.html#event:networkchanged">networkchanged</a></li><li><a href="Wallet.html#event:walletchanged">walletchanged</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Thu Jun 09 2022 19:47:41 GMT+0800 (Taipei Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sun Jun 19 2022 17:24:14 GMT+0800 (Taipei Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
